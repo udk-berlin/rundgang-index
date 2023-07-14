@@ -1,0 +1,104 @@
+header {
+  padding-bottom: 0px;
+}
+header > section h1 {
+  list-style: none;
+  display: inline;
+  margin-right: calc(var(--margin) * 2);
+}
+
+header > section div {
+  display: inline;
+}
+
+header .square {
+  width: 0.6rem;
+  height: 0.6rem;
+  background-color: var(--color-fg);
+  display: inline-block;
+}
+
+header > section > ul {
+  list-style: none;
+  display: inline;
+}
+
+header > section > ul > li {
+  list-style: none;
+  display: inline;
+  margin-right: calc(var(--margin) * 1);
+}
+
+header > section > select {
+  background: none;
+  border: none;
+}
+
+/* Contents */
+
+#contents {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  column-gap: 2rem;
+  row-gap: 2rem;
+}
+
+#contents article > a > section:not(:first) {
+  background-color: grey;
+}
+
+#contents article {
+  display: block;
+}
+
+#contents > article > a > section:nth-child(1) {
+  background-color: var(--color-lo);
+  height: 250px;
+  display: inline-block;
+  overflow: hidden;
+  width: 100%;
+}
+
+#contents article section img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+#searchContents {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: calc(var(--margin) * 3);
+}
+
+#searchContents input {
+  max-width: 1024px;
+}
+
+/* Author page */
+
+#authorHeader,
+#entryHeader {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  column-gap: 2rem;
+}
+
+#authorEntries h3 {
+  margin-bottom: calc(var(--margin) * 2);
+}
+
+/* Entry page */
+
+/* FOOTER */
+
+footer section:nth-child(2) {
+  text-align: right;
+}
+
+footer section:nth-child(2) > p {
+  text-align: right;
+  display: inline;
+  margin-left: calc(var(--margin) * 1);
+}
