@@ -89,6 +89,23 @@ header > section > select {
   margin-bottom: calc(var(--margin) * 2);
 }
 
+
+
+/* Structure Site */
+
+#structure {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+}
+
+#structureItems {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  column-gap: 2rem;
+  row-gap: 2rem;
+}
+
+
 /* Entry page */
 
 /* FOOTER */

@@ -1,15 +1,15 @@
 {
-    "name":"index",
-    "head": {
-        "title":"rundgang/index",
-        "author":"medienhaus/",
-        "keywords": "medienhaus, customizable, modular, free, open-source, environment, decentralized, distributed, communication, collaboration",
-        "description": "Customizable, modular, free and open-source environment for decentralized, distributed communication and collaboration without third-party dependencies."
-    },
+    "name":"rundgang/index",
     "api": {
         "rootId": "!iHhRSbqDkETnSEjRWv:content.udk-berlin.de",
         "url": "https://api.rundgang.udk-berlin.de",
         "version": "/api/v2/"
-    }
-
+    },
+    "hiddenAccounts": [
+        "@rundgang22-bot:content.udk-berlin.de",
+        "@rundgang23-bot:content.udk-berlin.de",
+        "@donotuse",
+        "@rundgaenge-bot:content.udk-berlin.de",
+        "@rundgang-bot:content.udk-berlin.de",
+      ]
 }
