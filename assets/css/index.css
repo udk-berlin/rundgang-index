@@ -11,6 +11,7 @@
   --color-medium-contrast: rgb(128,128,128);
   --color-low-contrast: rgb(240,240,240);
   --margin: 1rem;
+  --width: 55ch;
 }
 
 *, *::before, *::after {
@@ -41,8 +42,7 @@ html {
 body {
   font-size: 1rem;
   min-height: 100%;
-  padding-left: calc(var(--margin) * 1.4);
-  padding-right: calc(var(--margin) * 1.4);
+  padding: 0 calc(var(--margin) * 1.4);
 
   /* grid */
   display: grid;
@@ -125,9 +125,11 @@ strong, b {
   font-weight: bold;
 }
 
+/*
 a[rel~="external"] {
   white-space: nowrap;
 }
+*/
 
 a[rel~="external"]::after {
   content: "\2197";
@@ -171,8 +173,7 @@ header {
   grid-gap: calc(var(--margin) * 1.4);
   align-content: center;
   justify-content: space-between;
-  padding-top: calc(var(--margin) * 1.4);
-  padding-bottom: calc(var(--margin) * 1.4);
+  padding: calc(var(--margin) * 1.4) 0;
   position: sticky;
   top: 0;
   z-index: 1;
@@ -225,7 +226,7 @@ main figure > figcaption {
 }
 
 main p {
-  max-width: 52ch;
+  max-width: var(--width);
 }
 
 main ul {
