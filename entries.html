@@ -56,7 +56,9 @@
         </ul>
       </section>
     </footer>
-    <script src="./assets/js/main.js"></script>
-    <script>iniEntries()</script>
+    <script type="module">
+      import * as main from './assets/js/main.js';
+      main.iniEntries();
+    </script>
   </body>
 </html>

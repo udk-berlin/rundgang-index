@@ -1,17 +1,16 @@
-const apiUrl = "http://localhost:3009";
-const baseUrl = "http://localhost:8001";
+import LazyLoad from "../../assets/lib/vanilla-lazyload/vanilla-lazyload@19.0.3.js";
+
+let config;
+let apiUrl ;
+let baseUrl;
+
+
 
 let allAuthors = [];
 
 let allEntries = [];
 
-const excludedAccounts = [
-  "@rundgang22-bot:content.udk-berlin.de",
-  "@rundgang23-bot:content.udk-berlin.de",
-  "@donotuse",
-  "@rundgaenge-bot:content.udk-berlin.de",
-  "@rundgang-bot:content.udk-berlin.de",
-];
+let excludedAccounts = [];
 
 async function fetchGraphQL(query) {
   const req = await fetch(apiUrl + "/graphql", {
@@ -41,7 +40,12 @@ function search(data, content) {
   });
 }
 
-async function iniEntries() {
+export async function iniEntries() {
+  const response = await fetch('./config.json');
+  config = await response.json();
+  excludedAccounts = config.hiddenAccounts;
+  apiUrl = config.api.url; 
+
   //fill with content
   const call = await fetchGraphQL(
     "{\n  items {\n    id\n    name\n    thumbnail\n    origin {\n      authors {\n        name\n        id\n      }\n    }\n  }\n}\n"
@@ -61,11 +65,17 @@ async function iniEntries() {
       if (!entry?.name) return;
 
       if (entry.thumbnail) {
+        let url = new URL(entry.thumbnail);
+        let params = new URLSearchParams(url.search);
+        params.set('width', '200');
+        params.set('height', '200');
+        url.search = params.toString();
         const entryImg = document.createElement("img");
-        entryImg.src = entry.thumbnail;
+        entryImg.setAttribute("data-src", url.toString());
+        entryImg.classList.add('lazy');
         entryImgContainer.appendChild(entryImg);
       }
-
+      //<img alt="A lazy image" class="lazy" data-src="lazy.jpg" />
       entryLink.href = baseUrl + "/entry.html?id=" + entry.id;
 
       entryInfoContainer.innerHTML = entry.name;
@@ -88,6 +98,12 @@ async function iniEntries() {
     .addEventListener("input", (e) => {
       search(allEntries, e.target.value);
     });
+
+
+    var lazyLoadInstance = new LazyLoad({
+      // Your custom settings go here
+    });
+    lazyLoadInstance.update();
 }
 
 async function iniAuthors() {
