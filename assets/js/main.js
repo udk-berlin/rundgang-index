@@ -44,7 +44,7 @@ export async function iniEntries() {
   const response = await fetch('./config.json');
   config = await response.json();
   excludedAccounts = config.hiddenAccounts;
-  apiUrl = config.api.url; 
+  apiUrl = config.api.url;
   baseUrl = config.baseUrl;
 
   //fill with content
@@ -95,7 +95,7 @@ export async function iniEntries() {
   // add listener
 
   document
-    .querySelector("#searchContents > input")
+    .querySelector("#search > input")
     .addEventListener("input", (e) => {
       search(allEntries, e.target.value);
     });
@@ -111,7 +111,7 @@ export async function iniAuthors() {
   const response = await fetch('./config.json');
   config = await response.json();
   excludedAccounts = config.hiddenAccounts;
-  apiUrl = config.api.url; 
+  apiUrl = config.api.url;
   baseUrl = config.baseUrl;
 
   //fill with content
