@@ -21,9 +21,7 @@
   </head>
   <body>
     <header>
-      <section>
-          <h1><a href="/">rundgang/index</a></h1>
-      </section>
+      <h1><a href="/">rundgang/index</a></h1>
       <section>
         <select>
           <option>EN</option>
@@ -39,11 +37,21 @@
           <li><a href="/structure.html">structure</a></li>
         </ul>
       </nav>
+      <!--
       <section id="searchContents">
-          <input type="text" placeholder="search by name…" name="name" >
+      -->
+      <section>
+        <form id="search">
+          <input type="search" name="search" placeholder="Search …">
+          <button type="reset">Clear</button>
+        </form>
+        <section id="contents" class="grid column"></section>
+        <!--
+        <section id="contents"></section>
+        -->
       </section>
-      <section id="contents"></section>
     </main>
+    <!--
     <footer>
       <section>
         <p class="copyright">&#x1f12f; <a href="https://medienhaus.dev" rel="external nofollow noopener noreferrer" target="_blank"><strong>medienhaus/</strong></a></p>
@@ -56,6 +64,7 @@
         </ul>
       </section>
     </footer>
+    -->
     <script type="module">
       import * as main from './assets/js/main.js';
       main.iniEntries();
