@@ -123,6 +123,10 @@ input {
   padding: calc(var(--margin) * 0.2) calc(var(--margin) * 0.4);
 }
 
+input {
+  background-color: var(--color-background);
+}
+
 ol, ul {
   font-feature-settings: "case";
   list-style-position: inside;
