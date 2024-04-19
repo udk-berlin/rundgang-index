@@ -34,7 +34,7 @@ async function iniAuthorPage() {
   const call = await fetchGraphQL(
     '{  user(id: "' +
       id +
-      '") {    name    id    thumbnail    item {      name      thumbnail      id    }  }}'
+      '") {    name    id    thumbnail    item {      name      thumbnail      id    }  }}',
   );
 
   const userData = call?.user;

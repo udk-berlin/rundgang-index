@@ -1,8 +1,7 @@
 let config;
-let apiUrl ;
+let apiUrl;
 let baseUrl;
 let apiVersion;
-
 
 let allAuthors = [];
 
@@ -44,7 +43,6 @@ function search(data, content) {
   });
 }
 
-
 // async function getLevel(id) {
 //   const call = await fetchGraphQL(
 //     "{\n  context(id: \""+id+"\") {\n    name\n    id\n    context {\n      id\n      name\n    }\n    item {\n      id\n      name\n      thumbnail\n    }\n  }\n}"
@@ -53,30 +51,30 @@ function search(data, content) {
 // }
 
 async function getLevel(id) {
-  const response = await fetch(apiUrl+ apiVersion+ id);
+  const response = await fetch(apiUrl + apiVersion + id);
   const data = await response.json();
   return data;
 }
 
-function populateLevel(level,data) {
-  level.innerHTML = data?.name
-  const ul = document.createElement('ul')
-  data?.context?.forEach(context => {
-    const li = document.createElement('li')
-    const a = document.createElement('a')
+function populateLevel(level, data) {
+  level.innerHTML = data?.name;
+  const ul = document.createElement("ul");
+  data?.context?.forEach((context) => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
 
-    a.addEventListener('click', (e) => contextHandleClick(e,li,context?.id))
+    a.addEventListener("click", (e) => contextHandleClick(e, li, context?.id));
 
-    a.innerHTML= context?.name
-    li.appendChild(a)
-    ul.appendChild(li)
-  })
+    a.innerHTML = context?.name;
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
 
-  level.appendChild(ul)
+  level.appendChild(ul);
 }
 
 function updateItemView(itemsContainer, items) {
-  itemsContainer.innerHTML = ""
+  itemsContainer.innerHTML = "";
 
   items
     ?.sort((a, b) => 0.5 - Math.random())
@@ -106,51 +104,47 @@ function updateItemView(itemsContainer, items) {
 
       itemsContainer.appendChild(entryContainer);
     });
-
 }
 
-async function contextHandleClick(element,parent,id) {
-  element.preventDefault()
-  console.log(element)
-  console.log(parent)
-  console.log(id)
-  console.log('--------')
+async function contextHandleClick(element, parent, id) {
+  element.preventDefault();
+  console.log(element);
+  console.log(parent);
+  console.log(id);
+  console.log("--------");
 
-  const data = await getLevel(id)
-  console.log(data)
-  if(!data) return
-  updateItemView(document.getElementById("structureItems"),data?.item)
-  populateLevel(parent,data)
+  const data = await getLevel(id);
+  console.log(data);
+  if (!data) return;
+  updateItemView(document.getElementById("structureItems"), data?.item);
+  populateLevel(parent, data);
 }
 
 export async function iniStructure() {
-  const response = await fetch('./config.json');
+  const response = await fetch("./config.json");
   config = await response.json();
-  apiUrl = config.api.url; 
+  apiUrl = config.api.url;
   apiVersion = config.api.version;
 
-  const initialData = await getLevel(config.api.rootId)
-  console.log(initialData)
+  const initialData = await getLevel(config.api.rootId);
+  console.log(initialData);
 
-  const ul = document.createElement('ul')
-  const li = document.createElement('li')
-  populateLevel(li,initialData)
-  ul.appendChild(li)
+  const ul = document.createElement("ul");
+  const li = document.createElement("li");
+  populateLevel(li, initialData);
+  ul.appendChild(li);
 
-  document.getElementById('structureMenu').appendChild(ul)
+  document.getElementById("structureMenu").appendChild(ul);
 
   const entriesWrapper = document.getElementById("contents");
 
-
   // add listener
-
-  
 }
 
 async function iniAuthors() {
   //fill with content
   const call = await fetchGraphQL(
-    "{\n  users {\n    id\n    name\n    thumbnail\n    item {\n      id\n    }\n  }\n}\n"
+    "{\n  users {\n    id\n    name\n    thumbnail\n    item {\n      id\n    }\n  }\n}\n",
   );
 
   const authorsWrapper = document.getElementById("contents");

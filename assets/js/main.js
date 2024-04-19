@@ -1,10 +1,8 @@
 import LazyLoad from "../../assets/lib/vanilla-lazyload/vanilla-lazyload@19.0.3.js";
 
 let config;
-let apiUrl ;
+let apiUrl;
 let baseUrl;
-
-
 
 let allAuthors = [];
 
@@ -41,7 +39,7 @@ function search(data, content) {
 }
 
 export async function iniEntries() {
-  const response = await fetch('./config.json');
+  const response = await fetch("./config.json");
   config = await response.json();
   excludedAccounts = config.hiddenAccounts;
   apiUrl = config.api.url;
@@ -49,7 +47,7 @@ export async function iniEntries() {
 
   //fill with content
   const call = await fetchGraphQL(
-    "{\n  items {\n    id\n    name\n    thumbnail\n    origin {\n      authors {\n        name\n        id\n      }\n    }\n  }\n}\n"
+    "{\n  items {\n    id\n    name\n    thumbnail\n    origin {\n      authors {\n        name\n        id\n      }\n    }\n  }\n}\n",
   );
 
   const entriesWrapper = document.getElementById("contents");
@@ -68,12 +66,12 @@ export async function iniEntries() {
       if (entry.thumbnail) {
         let url = new URL(entry.thumbnail);
         let params = new URLSearchParams(url.search);
-        params.set('width', '200');
-        params.set('height', '200');
+        params.set("width", "200");
+        params.set("height", "200");
         url.search = params.toString();
         const entryImg = document.createElement("img");
         entryImg.setAttribute("data-src", url.toString());
-        entryImg.classList.add('lazy');
+        entryImg.classList.add("lazy");
         entryImgContainer.appendChild(entryImg);
       }
       //<img alt="A lazy image" class="lazy" data-src="lazy.jpg" />
@@ -94,21 +92,18 @@ export async function iniEntries() {
 
   // add listener
 
-  document
-    .querySelector("#search > input")
-    .addEventListener("input", (e) => {
-      search(allEntries, e.target.value);
-    });
+  document.querySelector("#search > input").addEventListener("input", (e) => {
+    search(allEntries, e.target.value);
+  });
 
-
-    var lazyLoadInstance = new LazyLoad({
-      // Your custom settings go here
-    });
-    lazyLoadInstance.update();
+  var lazyLoadInstance = new LazyLoad({
+    // Your custom settings go here
+  });
+  lazyLoadInstance.update();
 }
 
 export async function iniAuthors() {
-  const response = await fetch('./config.json');
+  const response = await fetch("./config.json");
   config = await response.json();
   excludedAccounts = config.hiddenAccounts;
   apiUrl = config.api.url;
@@ -116,7 +111,7 @@ export async function iniAuthors() {
 
   //fill with content
   const call = await fetchGraphQL(
-    "{\n  users {\n    id\n    name\n    thumbnail\n    item {\n      id\n    }\n  }\n}\n"
+    "{\n  users {\n    id\n    name\n    thumbnail\n    item {\n      id\n    }\n  }\n}\n",
   );
 
   const authorsWrapper = document.getElementById("contents");

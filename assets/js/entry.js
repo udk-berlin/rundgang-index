@@ -35,7 +35,7 @@ async function iniEntryPage() {
   const call = await fetchGraphQL(
     '{  entry(id: "' +
       id +
-      '") {    name    id    thumbnail    description {      language      content    }    origin {      application {        name      }      authors {        name        id      }    }    parents {      name      id    }    content {      name      id    }    item {      name      id      thumbnail    }    context {      name      id      thumbnail    }  }}'
+      '") {    name    id    thumbnail    description {      language      content    }    origin {      application {        name      }      authors {        name        id      }    }    parents {      name      id    }    content {      name      id    }    item {      name      id      thumbnail    }    context {      name      id      thumbnail    }  }}',
   );
 
   const entryData = call?.entry;
@@ -81,7 +81,7 @@ async function iniEntryPage() {
   // Description
   const descriptionContainer = document.createElement("div");
   descriptionContainer.innerHTML = entryData?.description?.find(
-    ({ language }) => language === selectedLanguage
+    ({ language }) => language === selectedLanguage,
   )?.content;
 
   // Authors
