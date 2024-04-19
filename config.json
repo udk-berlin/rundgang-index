@@ -1,5 +1,6 @@
 {
     "name":"rundgang/index",
+    "baseUrl":"http://localhost:8001",
     "api": {
         "rootId": "!iHhRSbqDkETnSEjRWv:content.udk-berlin.de",
         "url": "https://api.rundgang.udk-berlin.de",

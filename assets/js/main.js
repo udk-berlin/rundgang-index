@@ -45,6 +45,7 @@ export async function iniEntries() {
   config = await response.json();
   excludedAccounts = config.hiddenAccounts;
   apiUrl = config.api.url; 
+  baseUrl = config.baseUrl;
 
   //fill with content
   const call = await fetchGraphQL(
@@ -106,7 +107,13 @@ export async function iniEntries() {
     lazyLoadInstance.update();
 }
 
-async function iniAuthors() {
+export async function iniAuthors() {
+  const response = await fetch('./config.json');
+  config = await response.json();
+  excludedAccounts = config.hiddenAccounts;
+  apiUrl = config.api.url; 
+  baseUrl = config.baseUrl;
+
   //fill with content
   const call = await fetchGraphQL(
     "{\n  users {\n    id\n    name\n    thumbnail\n    item {\n      id\n    }\n  }\n}\n"
