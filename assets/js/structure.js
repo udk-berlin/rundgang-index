@@ -1,5 +1,8 @@
-const apiUrl = "http://localhost:3009";
-const baseUrl = "http://localhost:8001";
+let config;
+let apiUrl ;
+let baseUrl;
+let apiVersion;
+
 
 let allAuthors = [];
 
@@ -42,11 +45,17 @@ function search(data, content) {
 }
 
 
+// async function getLevel(id) {
+//   const call = await fetchGraphQL(
+//     "{\n  context(id: \""+id+"\") {\n    name\n    id\n    context {\n      id\n      name\n    }\n    item {\n      id\n      name\n      thumbnail\n    }\n  }\n}"
+//   );
+//   return call?.context
+// }
+
 async function getLevel(id) {
-  const call = await fetchGraphQL(
-    "{\n  context(id: \""+id+"\") {\n    name\n    id\n    context {\n      id\n      name\n    }\n    item {\n      id\n      name\n      thumbnail\n    }\n  }\n}"
-  );
-  return call?.context
+  const response = await fetch(apiUrl+ apiVersion+ id);
+  const data = await response.json();
+  return data;
 }
 
 function populateLevel(level,data) {
@@ -114,10 +123,13 @@ async function contextHandleClick(element,parent,id) {
   populateLevel(parent,data)
 }
 
-async function iniStructure() {
-  //fill with content
+export async function iniStructure() {
+  const response = await fetch('./config.json');
+  config = await response.json();
+  apiUrl = config.api.url; 
+  apiVersion = config.api.version;
 
-  const initialData = await getLevel("!iHhRSbqDkETnSEjRWv:content.udk-berlin.de")
+  const initialData = await getLevel(config.api.rootId)
   console.log(initialData)
 
   const ul = document.createElement('ul')
@@ -129,45 +141,10 @@ async function iniStructure() {
 
   const entriesWrapper = document.getElementById("contents");
 
-  call?.items
-    ?.sort((a, b) => 0.5 - Math.random())
-    .forEach((entry, i) => {
-      const entryContainer = document.createElement("article");
-      const entryLink = document.createElement("a");
-      const entryImgContainer = document.createElement("section");
-      const entryInfoContainer = document.createElement("section");
-
-      if (entry?.id?.includes("@donotuse")) return;
-      if (!entry?.name) return;
-
-      if (entry.thumbnail) {
-        const entryImg = document.createElement("img");
-        entryImg.src = entry.thumbnail;
-        entryImgContainer.appendChild(entryImg);
-      }
-
-      entryLink.href = baseUrl + "/entry.html?id=" + entry.id;
-
-      entryInfoContainer.innerHTML = entry.name;
-
-      entryLink.appendChild(entryImgContainer);
-      entryLink.appendChild(entryInfoContainer);
-
-      entryContainer.appendChild(entryLink);
-
-      entriesWrapper.appendChild(entryContainer);
-      entry.html = entryContainer;
-
-      allEntries.push(entry);
-    });
 
   // add listener
 
-  document
-    .querySelector("#searchContents > input")
-    .addEventListener("input", (e) => {
-      search(allEntries, e.target.value);
-    });
+  
 }
 
 async function iniAuthors() {
