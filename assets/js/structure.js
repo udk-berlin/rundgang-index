@@ -7,13 +7,7 @@ let allAuthors = [];
 
 let allEntries = [];
 
-const excludedAccounts = [
-  "@rundgang22-bot:content.udk-berlin.de",
-  "@rundgang23-bot:content.udk-berlin.de",
-  "@donotuse",
-  "@rundgaenge-bot:content.udk-berlin.de",
-  "@rundgang-bot:content.udk-berlin.de",
-];
+let excludedAccounts = [];
 
 async function fetchGraphQL(query) {
   const req = await fetch(apiUrl + "/graphql", {
@@ -28,27 +22,7 @@ async function fetchGraphQL(query) {
   return data?.data;
 }
 
-function search(data, content) {
-  if (content === "") {
-    data.forEach((entry) => {
-      entry.html.style.display = "block";
-    });
-  }
-  data.forEach((entry) => {
-    if (entry.name.toLowerCase().includes(content.toLowerCase())) {
-      entry.html.style.display = "block";
-    } else {
-      entry.html.style.display = "none";
-    }
-  });
-}
 
-// async function getLevel(id) {
-//   const call = await fetchGraphQL(
-//     "{\n  context(id: \""+id+"\") {\n    name\n    id\n    context {\n      id\n      name\n    }\n    item {\n      id\n      name\n      thumbnail\n    }\n  }\n}"
-//   );
-//   return call?.context
-// }
 
 async function getLevel(id) {
   const response = await fetch(apiUrl + apiVersion + id);
@@ -57,8 +31,12 @@ async function getLevel(id) {
 }
 
 function populateLevel(level, data) {
-  level.innerHTML = data?.name;
+  level.innerHTML = "";
   const ul = document.createElement("ul");
+  console.log(data)
+  const details = document.createElement("details");
+  const summary = document.createElement("summary");
+  summary.innerHTML = data?.name;
   data?.context?.forEach((context) => {
     const li = document.createElement("li");
     const a = document.createElement("a");
@@ -70,7 +48,9 @@ function populateLevel(level, data) {
     ul.appendChild(li);
   });
 
-  level.appendChild(ul);
+  details.appendChild(summary);
+  details.appendChild(ul);
+  level.appendChild(details);
 }
 
 function updateItemView(itemsContainer, items) {
@@ -108,13 +88,10 @@ function updateItemView(itemsContainer, items) {
 
 async function contextHandleClick(element, parent, id) {
   element.preventDefault();
-  console.log(element);
-  console.log(parent);
-  console.log(id);
-  console.log("--------");
+
 
   const data = await getLevel(id);
-  console.log(data);
+
   if (!data) return;
   updateItemView(document.getElementById("structureItems"), data?.item);
   populateLevel(parent, data);
@@ -125,9 +102,12 @@ export async function iniStructure() {
   config = await response.json();
   apiUrl = config.api.url;
   apiVersion = config.api.version;
+  excludedAccounts = config.hiddenAccounts;
+  baseUrl = config.baseUrl;
+
 
   const initialData = await getLevel(config.api.rootId);
-  console.log(initialData);
+
 
   const ul = document.createElement("ul");
   const li = document.createElement("li");
@@ -139,53 +119,4 @@ export async function iniStructure() {
   const entriesWrapper = document.getElementById("contents");
 
   // add listener
-}
-
-async function iniAuthors() {
-  //fill with content
-  const call = await fetchGraphQL(
-    "{\n  users {\n    id\n    name\n    thumbnail\n    item {\n      id\n    }\n  }\n}\n",
-  );
-
-  const authorsWrapper = document.getElementById("contents");
-  call?.users
-    ?.sort((a, b) => 0.5 - Math.random())
-    .forEach((author, i) => {
-      const authorContainer = document.createElement("article");
-      const authorLink = document.createElement("a");
-      const authorImgContainer = document.createElement("section");
-      const authorInfoContainer = document.createElement("section");
-
-      if (author?.id?.includes("@donotuse")) return;
-      if (!author?.item || author?.item?.length <= 0) return;
-      if (!author?.name) return;
-
-      if (author.thumbnail) {
-        const authorImg = document.createElement("img");
-        authorImg.src = author.thumbnail;
-        authorImgContainer.appendChild(authorImg);
-      }
-
-      authorLink.href = baseUrl + "/author.html?id=" + author.id;
-
-      authorInfoContainer.innerHTML = author.name;
-
-      authorLink.appendChild(authorImgContainer);
-      authorLink.appendChild(authorInfoContainer);
-
-      authorContainer.appendChild(authorLink);
-
-      authorsWrapper.appendChild(authorContainer);
-      author.html = authorContainer;
-
-      allAuthors.push(author);
-    });
-
-  // add listener
-
-  document
-    .querySelector("#searchContents > input")
-    .addEventListener("input", (e) => {
-      search(allAuthors, e.target.value);
-    });
 }
