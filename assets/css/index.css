@@ -226,6 +226,9 @@ main {
   grid-template-columns: max-content 1fr;
   grid-gap: calc(var(--margin) * 2.8);
   justify-content: space-between;
+
+  /* @NOTE: some spacing above viewport bottom */
+  padding-bottom: calc(var(--margin) * 2);
 }
 
 main > :first-child {
