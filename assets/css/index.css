@@ -231,7 +231,7 @@ main {
   padding-bottom: calc(var(--margin) * 2);
 }
 
-main > :first-child {
+main > nav {
   min-width: 20ch;
 }
 
@@ -245,9 +245,11 @@ main > nav + section {
 }
 */
 
+/*
 main > section > * + *:not(section.grid) {
   margin-top: calc(var(--margin) * 1.4);
 }
+*/
 
 main a:link {
   text-decoration: underline;
@@ -285,7 +287,6 @@ main .grid.column {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   grid-gap: calc(var(--margin) * 1.4);
-  height: 100%;
 }
 
 main .grid.column > article > a {
@@ -326,6 +327,7 @@ main .grid.column a:link {
   text-decoration: none;
 }
 
+main h3,
 main form#search {
   background-color: var(--color-background);
   display: flex;
@@ -386,6 +388,7 @@ nav ul {
   header {
     position: initial;
   }
+  main h3,
   main form#search {
     margin-top: -1.4rem;
     padding-top: calc(var(--margin) * 1.4);
