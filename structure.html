@@ -14,16 +14,11 @@
     <link rel="mask-icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="license" href="//creativecommons.org/licenses/by-nc-nd/4.0" />
     <link rel="stylesheet" type="text/css" href="./assets/css/index.css" />
-    <!--
-    <link rel="stylesheet" type="text/css" href="./assets/css/custom.css" />
-    -->
     <title>rundgang/index</title>
   </head>
   <body>
     <header>
-      <section>
           <h1><a href="/">rundgang/index</a></h1>
-      </section>
       <section>
         <select>
           <option>EN</option>
@@ -40,22 +35,15 @@
         </ul>
       </nav>
       <section id="structureMenu">
-      </section>
-      <section id="structureItems">
+        <!--
+        <form id="search">
+          <input type="search" name="search" placeholder="Search …">
+          <button type="reset">Clear</button>
+        </form>
+        -->
+        <section id="structureItems"></section>
       </section>
     </main>
-    <footer>
-      <section>
-        <p class="copyright">&#x1f12f; <a href="https://medienhaus.dev" rel="external nofollow noopener noreferrer" target="_blank"><strong>medienhaus/</strong></a></p>
-      </section>
-     <section>
-        <ul>
-          <li><a href="/faq">faq</a></li>
-          <li><a href="/contact">contact</a></li>
-          <li><a href="/imprint">imprint</a></li>
-        </ul>
-     </section>
-    </footer>
     <script type="module">
       import * as main from './assets/js/structure.js';
       main.iniStructure();
