@@ -37,7 +37,9 @@ function populateLevel(level, data) {
   const details = document.createElement("details");
   const summary = document.createElement("summary");
   summary.innerHTML = data?.name;
-  data?.context?.forEach((context) => {
+
+  let sortedContext = [...data.context].sort((a, b) => a.name.localeCompare(b.name));
+  sortedContext.forEach((context) => {
     const li = document.createElement("li");
     const a = document.createElement("a");
 
