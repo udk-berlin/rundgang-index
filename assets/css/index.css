@@ -285,13 +285,37 @@ main .grid.column {
   height: 100%;
 }
 
-main .grid.column > article {
+main .grid.column > article > a {
   background-color: var(--color-low-contrast);
-  min-height: 10rem;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--margin) * 0.5);
+  padding: calc(var(--margin) * 1);
+}
+
+main .grid.column > article > a > :first-child {
+  background-color: var(--color-medium-contrast);
+  /* NOTE: removes small gap below figure ... */
+  line-height: 0;
+}
+
+/* @NOTE: makes all images square and cover/fill the space */
+/*
+main .grid.column > article > a > :first-child > img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+*/
+
+main .grid.column > article > a > :first-child:empty {
+  aspect-ratio: 1 / 1;
+  /*
+  min-height: calc(var(--margin) * 14);
+  */
 }
 
 main .grid.column > article > a > :last-child {
-  padding: calc(var(--margin) * 0.2) calc(var(--margin) * 0.4);
+  min-height: calc(var(--margin) * 4.2);
 }
 
 main .grid.column a:link {
