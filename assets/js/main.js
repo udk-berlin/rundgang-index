@@ -57,8 +57,8 @@ export async function iniEntries() {
     .forEach((entry, i) => {
       const entryContainer = document.createElement("article");
       const entryLink = document.createElement("a");
-      const entryImgContainer = document.createElement("section");
-      const entryInfoContainer = document.createElement("section");
+      const entryImgContainer = document.createElement("figure");
+      const entryInfoContainer = document.createElement("p");
 
       if (entry?.id?.includes("@donotuse")) return;
       if (!entry?.name) return;
