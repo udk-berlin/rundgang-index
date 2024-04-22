@@ -327,6 +327,11 @@ main .grid.column a:link {
   text-decoration: none;
 }
 
+/* @NOTE: visually align h3 with form across pages */
+main h3 {
+  padding-top: calc(var(--margin) * 0.32);
+}
+
 main h3,
 main form#search {
   background-color: var(--color-background);
