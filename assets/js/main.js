@@ -120,8 +120,8 @@ export async function iniAuthors() {
     .forEach((author, i) => {
       const authorContainer = document.createElement("article");
       const authorLink = document.createElement("a");
-      const authorImgContainer = document.createElement("section");
-      const authorInfoContainer = document.createElement("section");
+      const authorImgContainer = document.createElement("figure");
+      const authorInfoContainer = document.createElement("p");
 
       if (author?.id?.includes("@donotuse")) return;
       if (!author?.item || author?.item?.length <= 0) return;
