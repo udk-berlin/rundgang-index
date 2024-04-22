@@ -1,16 +1,12 @@
-const apiUrl = "http://localhost:3009";
-const baseUrl = "http://localhost:8001";
+let config;
+let apiUrl;
+let baseUrl;
 
 let allEntries = [];
 
 let selectedLanguage = "DEFAULT";
 
-const excludedAccounts = [
-  "@rundgang22-bot:content.udk-berlin.de",
-  "@rundgang23-bot:content.udk-berlin.de",
-  "@donotuse",
-  "@rundgaenge-bot:content.udk-berlin.de",
-  "@rundgang-bot:content.udk-berlin.de",
+let excludedAccounts = [
 ];
 
 async function fetchGraphQL(query) {
@@ -27,6 +23,13 @@ async function fetchGraphQL(query) {
 }
 
 async function iniEntryPage() {
+  const response = await fetch("./config.json");
+  config = await response.json();
+  excludedAccounts = config.hiddenAccounts;
+  apiUrl = config.api.url;
+  baseUrl = config.baseUrl;
+
+  
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
 
