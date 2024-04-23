@@ -92,6 +92,13 @@ function updateItemView(itemsContainer, items) {
 
 async function contextHandleClick(element, parent, id) {
  // element.preventDefault();
+ const activeElements = document.querySelectorAll('.active');
+
+  activeElements.forEach(element => {
+    element.classList.remove('active');
+  });
+  console.log(element)
+  element.originalTarget.classList.add("active")
 
 
   const data = await getLevel(id);
@@ -120,6 +127,7 @@ export async function iniStructure() {
   summary.innerHTML = initialData?.name;
   details.appendChild(summary);
   li.appendChild(details);
+  summary.addEventListener("click", (e) => contextHandleClick(e, details, initialData.id));
 
 
   populateLevel(details, initialData);
