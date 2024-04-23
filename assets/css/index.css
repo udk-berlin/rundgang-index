@@ -364,14 +364,24 @@ main #structure ul {
   list-style-type: none;
 }
 
-main #explore {
+main #exploreContent {
   display: grid;
   grid-gap: calc(var(--margin) * 2.8);
-  grid-template-columns: 24ch 1fr;
+  grid-template-columns: max-content 1fr;
 }
+
+/*
+main #exploreContexts:empty {
+  display: none;
+}
+*/
 
 main #explorePath + * {
   margin-top: calc(var(--margin) * 1.4);
+}
+
+main #explorePath > ul {
+  max-height: 100%;
 }
 
 main #explorePath ul li {
@@ -380,20 +390,6 @@ main #explorePath ul li {
 
 main #explorePath ul li:not(:first-child)::before {
   content: " → ";
-}
-
-main #explorePath > ul {
-  max-height: 100%;
-}
-
-main .grid.column {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  grid-gap: calc(var(--margin) * 1.4);
-}
-
-main .grid.column a:link {
-  text-decoration: none;
 }
 
 /*
@@ -439,6 +435,16 @@ nav {
 }
 */
 
+.grid.column {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  grid-gap: calc(var(--margin) * 1.4);
+}
+
+.grid.column a:link {
+  text-decoration: none;
+}
+
 @keyframes init {
   from {
     opacity: 0;
@@ -474,6 +480,11 @@ nav {
     margin-top: -1.4rem;
     padding-top: calc(var(--margin) * 1.4);
     top: 0;
+  }
+  main #exploreContent {
+    grid-auto-flow: row;
+    grid-gap: calc(var(--margin) * 1.4);
+    grid-template-columns: unset;
   }
   main #structure {
     grid-auto-flow: row;
