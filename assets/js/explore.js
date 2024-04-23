@@ -13,10 +13,9 @@ async function getLevel(id) {
   return data;
 }
 
-
 function populateItems(itemsContainer, items) {
   itemsContainer.innerHTML = "";
-  console.log(items)
+  console.log(items);
   items
     ?.sort((a, b) => 0.5 - Math.random())
     .forEach((entry, i) => {
@@ -55,10 +54,8 @@ export async function iniExplore() {
   excludedAccounts = config.hiddenAccounts;
   baseUrl = config.baseUrl;
 
-  
-
   const urlParams = new URLSearchParams(window.location.search);
-   id = urlParams.get('id');
+  id = urlParams.get("id");
 
   if (!id) {
     const response = await fetch(`${apiUrl}${apiVersion}`);
@@ -66,46 +63,38 @@ export async function iniExplore() {
     id = data?.rootId;
   }
 
-  if(!id) return;
-
+  if (!id) return;
 
   const exploreContent = document.getElementById("exploreContent");
 
-
-
-  const itemsWrapper = document.createElement("section")
+  const itemsWrapper = document.createElement("section");
   itemsWrapper.id = "exploreItems";
-  const contextWrapper = document.createElement("section")
+  itemsWrapper.classList.add("grid");
+  itemsWrapper.classList.add("column");
+  const contextWrapper = document.createElement("section");
   contextWrapper.id = "exploreContexts";
-
-
-
 
   populatePath(await getPath(id));
   const level = await getLevel(id);
 
-  if(level.item.length <= 0 && level.context.length <= 0) {
+  if (level.item.length <= 0 && level.context.length <= 0) {
     const code = document.createElement("code");
-    code.innerHTML = '¯\\_(ツ)_/¯'
+    code.innerHTML = "¯\\_(ツ)_/¯";
     itemsWrapper.appendChild(code);
-    return
+    return;
   }
-  populateContexts(contextWrapper,level);
+  populateContexts(contextWrapper, level);
   populateItems(itemsWrapper, level.item);
-
 
   exploreContent.appendChild(contextWrapper);
   exploreContent.appendChild(itemsWrapper);
-  
-
-
 }
 
-function populateContexts(contextContainer,data) {
-
-
+function populateContexts(contextContainer, data) {
   const ul = document.createElement("ul");
-  let sortedContext = [...data.context].sort((a, b) => a.name.localeCompare(b.name));
+  let sortedContext = [...data.context].sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
   sortedContext.forEach((context) => {
     const li = document.createElement("li");
     const contextLink = document.createElement("a");
@@ -115,11 +104,9 @@ function populateContexts(contextContainer,data) {
     li.appendChild(contextLink);
     ul.appendChild(li);
 
-
     contextContainer.appendChild(ul);
-  })
+  });
 }
-
 
 function populatePath(data) {
   const pathContainer = document.getElementById("explorePath");
@@ -127,8 +114,8 @@ function populatePath(data) {
 
   const ul = document.createElement("ul");
 
-  if(data.length  <= 1 ) {
-    return
+  if (data.length <= 1) {
+    return;
   }
 
   data.forEach((path) => {
@@ -144,7 +131,6 @@ function populatePath(data) {
 
   pathContainer.appendChild(ul);
 }
-
 
 async function getPath(id) {
   const response = await fetch(`${apiUrl}${apiVersion}${id}/pathList`);
