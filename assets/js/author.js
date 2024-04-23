@@ -46,16 +46,22 @@ async function iniAuthorPage() {
   if (!userData) return;
 
   const headerContainer = document.getElementById("authorHeader");
-  const entriesContainer = document.getElementById("authorEntries");
+  // const entriesContainer = document.getElementById("authorEntries");
 
-  headerContainer.querySelector("aside >  h2").innerHTML = userData?.name;
-  headerContainer.querySelector("img").src = userData?.thumbnail;
+  headerContainer.querySelector("#authorHeader h2").innerHTML = userData?.name;
+  // headerContainer.querySelector("#authorHeader img").src = userData?.thumbnail;
+
+  if (userData.thumbnail) {
+    const authorImg = document.createElement("img");
+    authorImg.src = userData.thumbnail;
+    headerContainer.querySelector("figure").appendChild(authorImg);
+  }
 
   userData?.item?.forEach((entry) => {
     const entryContainer = document.createElement("article");
     const entryLink = document.createElement("a");
-    const entryImgContainer = document.createElement("section");
-    const entryInfoContainer = document.createElement("section");
+    const entryImgContainer = document.createElement("figure");
+    const entryInfoContainer = document.createElement("p");
 
     if (entry?.id?.includes("@donotuse")) return;
     if (!entry?.name) return;
@@ -75,6 +81,6 @@ async function iniAuthorPage() {
 
     entryContainer.appendChild(entryLink);
 
-    document.getElementById("contents").appendChild(entryContainer);
+    document.getElementById("authorEntries").appendChild(entryContainer);
   });
 }

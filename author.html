@@ -36,17 +36,16 @@
           <li><a href="/structure.html">structure</a></li>
         </ul>
       </nav>
-      <section id="authorHeader">
-        <img />
-        <aside>
-          <h2></h2>
-        </aside>
-      </section>
-      <section id="authorEntries">
+      <section id="authorEntries" class="grid column">
+        <article id="authorHeader">
+          <!-- @NOTE: we need this <div> here, else an empty <figure>, i.e.
+          our background-colored placeholder takes up full height/width -->
+          <div>
+            <figure></figure>
+            <h2></h2>
+          </div>
+        </article>
         <hr />
-        <h3>entries</h3>
-        <aside id="contents">
-        </aside>
       </section>
     </main>
     <script src="./assets/js/author.js"></script>

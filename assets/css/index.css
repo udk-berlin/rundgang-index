@@ -231,10 +231,6 @@ main {
   padding-bottom: calc(var(--margin) * 2);
 }
 
-main > nav {
-  min-width: 20ch;
-}
-
 /*
 main > nav {
   grid-column: 1;
@@ -256,6 +252,44 @@ main a:link {
   text-decoration-style: dotted;
 }
 
+main article > * {
+  background-color: var(--color-low-contrast);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--margin) * 0.5);
+  padding: calc(var(--margin) * 1);
+}
+
+main article figure {
+  /* NOTE: removes small gap below figure ... */
+  line-height: 0;
+}
+
+/* @NOTE: makes all images square and cover/fill the space */
+main article figure > img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+/* @NOTE: square placeholder if no image was provided */
+main article figure:empty {
+  aspect-ratio: 1 / 1;
+  background-color: var(--color-medium-contrast);
+  /*
+  min-height: calc(var(--margin) * 14);
+  */
+}
+
+main article h2,
+main article p {
+  min-height: calc(var(--margin) * 4.2);
+}
+
+main article#authorHeader + hr {
+  align-self: end;
+  margin: 0;
+}
+
 /* NOTE: removes small gap below figure ... */
 main figure {
   line-height: 0;
@@ -267,6 +301,25 @@ main figure > figcaption {
   line-height: 1.4;
   padding: 0 calc(var(--margin) * 0.2);
   text-align: center;
+}
+
+main form#search > input {
+  width: 100%;
+}
+
+main form#search,
+main h3 {
+  background-color: var(--color-background);
+  display: flex;
+  gap: calc(var(--margin) * 0.35);
+  padding-bottom: calc(var(--margin) * 1.4);
+  position: sticky;
+  top: 4.2rem;
+}
+
+/* @NOTE: visually align h3 with form across pages */
+main h3 {
+  padding-top: calc(var(--margin) * 0.32);
 }
 
 main p {
@@ -289,62 +342,15 @@ main .grid.column {
   grid-gap: calc(var(--margin) * 1.4);
 }
 
-main .grid.column > article > a {
-  background-color: var(--color-low-contrast);
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--margin) * 0.5);
-  padding: calc(var(--margin) * 1);
-}
-
-main .grid.column > article > a > figure {
-  background-color: var(--color-medium-contrast);
-  /* NOTE: removes small gap below figure ... */
-  line-height: 0;
-}
-
-/* @NOTE: makes all images square and cover/fill the space */
-/*
-main .grid.column > article > a > figure > img {
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-}
-*/
-
-/* @NOTE: square placeholder if no image was provided */
-main .grid.column > article > a > figure:empty {
-  aspect-ratio: 1 / 1;
-  /*
-  min-height: calc(var(--margin) * 14);
-  */
-}
-
-main .grid.column > article > a > p {
-  min-height: calc(var(--margin) * 4.2);
-}
-
 main .grid.column a:link {
   text-decoration: none;
 }
 
-/* @NOTE: visually align h3 with form across pages */
-main h3 {
-  padding-top: calc(var(--margin) * 0.32);
+/*
+main #structureMenu ul > ul {
+  padding-left: calc(var(--margin) * 2);
 }
-
-main h3,
-main form#search {
-  background-color: var(--color-background);
-  display: flex;
-  gap: calc(var(--margin) * 0.35);
-  padding-bottom: calc(var(--margin) * 1.4);
-  position: sticky;
-  top: 4.2rem;
-}
-
-main form#search > input {
-  width: 100%;
-}
+*/
 
 /*
 nav > * + * {
@@ -352,16 +358,36 @@ nav > * + * {
 }
 */
 
+nav {
+  width: 20ch;
+}
+
 nav a:link {
   text-decoration: underline;
   text-decoration-style: dotted;
 }
+
+/*
+nav article {
+  position: sticky;
+  bottom: calc(var(--margin) * 2);
+}
+*/
 
 nav ul {
   position: sticky;
   top: 4.2rem;
   list-style-type: "\002f\feff";
 }
+
+/*
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--margin) * 1.4);
+  justify-content: space-between;
+}
+*/
 
 @keyframes init {
   from {
@@ -399,6 +425,12 @@ nav ul {
     padding-top: calc(var(--margin) * 1.4);
     top: 0;
   }
+  /*
+  nav {
+    flex-direction: row;
+    width: 100%;
+  }
+  */
   /*
   footer {
     align-items: end;
