@@ -74,7 +74,7 @@ export async function iniExplore() {
   const level = await getLevel(id);
 
   populateContexts(level);
-  populateItems(document.getElementById("structureItems"), level.item);
+  populateItems(document.getElementById("exploreItems"), level.item);
 
 
 }
@@ -82,7 +82,7 @@ export async function iniExplore() {
 function populateContexts(data) {
   console.log(data)
 
-  const contextContainer = document.getElementById("structureContexts");
+  const contextContainer = document.getElementById("exploreContexts");
   const ul = document.createElement("ul");
   let sortedContext = [...data.context].sort((a, b) => a.name.localeCompare(b.name));
   sortedContext.forEach((context) => {
@@ -101,7 +101,7 @@ function populateContexts(data) {
 
 
 function populatePath(data) {
-  const pathContainer = document.getElementById("structurePath");
+  const pathContainer = document.getElementById("explorePath");
   pathContainer.innerHTML = "";
 
   const ul = document.createElement("ul");

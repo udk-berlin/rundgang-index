@@ -14,10 +14,6 @@
     <link rel="mask-icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="license" href="//creativecommons.org/licenses/by-nc-nd/4.0" />
     <link rel="stylesheet" type="text/css" href="./assets/css/index.css" />
-    <!--
-    <link rel="stylesheet" type="text/css" href="./assets/css/index.robert.css" />
-    <link rel="stylesheet" type="text/css" href="./assets/css/custom.css" />
-    -->
     <title>rundgang/index</title>
   </head>
   <body>
@@ -37,40 +33,16 @@
           <li><a href="/authors.html">authors</a></li>
           <li><a class="active" href="/explore.html">explore</a></li>
         </ul>
-        <!--
-        <br />
-        <section id="structureMenu"></section>
-        -->
       </nav>
       <section id="explore">
-        <section id="structurePath" style="list"></section>
-        <section id="structureContexts"></section>
-        <section id="structureItems" class="grid column"></section>
+        <section id="explorePath"></section>
+        <section id="exploreContexts"></section>
+        <section id="exploreItems" class="grid column"></section>
       </section>
-      <!--
-      <section id="structureItems" class="grid column"></section>
-      -->
     </main>
     <script type="module">
       import * as main from './assets/js/explore.js';
       main.iniExplore();
     </script>
-    <style>
-      /* just for dev purpose */
-      #structurePath ul {
-        list-style: none; /* Remove default list bullets */
-        padding: 0;
-        margin: 0;
-      }
-
-      #structurePath ul li {
-        display: inline; /* Display list items in a row */
-      
-      }
-
-      #structurePath ul li:not(:first-child)::before {
-        content: "→ "; /* Add arrow before each list item */
-      }
-    </style>
   </body>
 </html>

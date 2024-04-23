@@ -364,7 +364,25 @@ main #structure ul {
   list-style-type: none;
 }
 
-main #structureMenu > ul {
+main #explore {
+  display: grid;
+  grid-gap: calc(var(--margin) * 2.8);
+  grid-template-columns: 24ch 1fr;
+}
+
+main #explorePath + * {
+  margin-top: calc(var(--margin) * 1.4);
+}
+
+main #explorePath ul li {
+  display: inline;
+}
+
+main #explorePath ul li:not(:first-child)::before {
+  content: " → ";
+}
+
+main #explorePath > ul {
   max-height: 100%;
 }
 
