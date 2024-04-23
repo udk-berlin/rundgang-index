@@ -43,7 +43,8 @@
         -->
       </nav>
       <section id="explore">
-        <section id="structureMenu"></section>
+        <section id="structurePath" style="list"></section>
+        <section id="structureContexts"></section>
         <section id="structureItems" class="grid column"></section>
       </section>
       <!--
@@ -52,7 +53,24 @@
     </main>
     <script type="module">
       import * as main from './assets/js/explore.js';
-      main.iniStructure();
+      main.iniExplore();
     </script>
+    <style>
+      /* just for dev purpose */
+      #structurePath ul {
+        list-style: none; /* Remove default list bullets */
+        padding: 0;
+        margin: 0;
+      }
+
+      #structurePath ul li {
+        display: inline; /* Display list items in a row */
+      
+      }
+
+      #structurePath ul li:not(:first-child)::before {
+        content: "→ "; /* Add arrow before each list item */
+      }
+    </style>
   </body>
 </html>

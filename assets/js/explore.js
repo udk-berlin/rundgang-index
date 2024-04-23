@@ -3,26 +3,9 @@ let apiUrl;
 let baseUrl;
 let apiVersion;
 
-let allAuthors = [];
-
-let allEntries = [];
+let id;
 
 let excludedAccounts = [];
-
-async function fetchGraphQL(query) {
-  const req = await fetch(apiUrl + "/graphql", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ operationName: null, variables: {}, query: query }),
-  });
-
-  const data = await req.json();
-  return data?.data;
-}
-
-
 
 async function getLevel(id) {
   const response = await fetch(apiUrl + apiVersion + id);
@@ -30,36 +13,10 @@ async function getLevel(id) {
   return data;
 }
 
-function populateLevel(level, data) {
-  if(level.querySelector("ul")) level.removeChild(level.querySelector("ul"));
-  const ul = document.createElement("ul");
 
-
-
-  let sortedContext = [...data.context].sort((a, b) => a.name.localeCompare(b.name));
-  sortedContext.forEach((context) => {
-    const li = document.createElement("li");
-    const details = document.createElement("details");
-    const summary = document.createElement("summary");
-
-    summary.addEventListener("click", (e) => contextHandleClick(e, details, context?.id));
-
-
-
-    
-    summary.innerHTML = context?.name;
-    details.appendChild(summary);
-    li.appendChild(details);
-    ul.appendChild(li);
-  });
-
-  
-  level.appendChild(ul);
-}
-
-function updateItemView(itemsContainer, items) {
+function populateItems(itemsContainer, items) {
   itemsContainer.innerHTML = "";
-
+  console.log(items)
   items
     ?.sort((a, b) => 0.5 - Math.random())
     .forEach((entry, i) => {
@@ -90,25 +47,7 @@ function updateItemView(itemsContainer, items) {
     });
 }
 
-async function contextHandleClick(element, parent, id) {
- // element.preventDefault();
- const activeElements = document.querySelectorAll('.active');
-
-  activeElements.forEach(element => {
-    element.classList.remove('active');
-  });
-  console.log(element)
-  element.originalTarget.classList.add("active")
-
-
-  const data = await getLevel(id);
-
-  if (!data) return;
-  updateItemView(document.getElementById("structureItems"), data?.item);
-  populateLevel(parent, data);
-}
-
-export async function iniStructure() {
+export async function iniExplore() {
   const response = await fetch("./config.json");
   config = await response.json();
   apiUrl = config.api.url;
@@ -116,26 +55,78 @@ export async function iniStructure() {
   excludedAccounts = config.hiddenAccounts;
   baseUrl = config.baseUrl;
 
+  
 
-  const initialData = await getLevel(config.api.rootId);
+  const urlParams = new URLSearchParams(window.location.search);
+   id = urlParams.get('id');
 
+  if (!id) {
+    const response = await fetch(`${apiUrl}${apiVersion}`);
+    const data = await response.json();
+    id = data?.rootId;
+  }
+
+  if(!id) return;
+
+
+
+  populatePath(await getPath(id));
+  const level = await getLevel(id);
+
+  populateContexts(level);
+  populateItems(document.getElementById("structureItems"), level.item);
+
+
+}
+
+function populateContexts(data) {
+  console.log(data)
+
+  const contextContainer = document.getElementById("structureContexts");
+  const ul = document.createElement("ul");
+  let sortedContext = [...data.context].sort((a, b) => a.name.localeCompare(b.name));
+  sortedContext.forEach((context) => {
+    const li = document.createElement("li");
+    const contextLink = document.createElement("a");
+    contextLink.href = baseUrl + "/explore.html?id=" + context?.id;
+    contextLink.innerHTML = context?.name;
+
+    li.appendChild(contextLink);
+    ul.appendChild(li);
+
+
+    contextContainer.appendChild(ul);
+  })
+}
+
+
+function populatePath(data) {
+  const pathContainer = document.getElementById("structurePath");
+  pathContainer.innerHTML = "";
 
   const ul = document.createElement("ul");
-  const li = document.createElement("li");
-  const details = document.createElement("details");
-  const summary = document.createElement("summary");
-  summary.innerHTML = initialData?.name;
-  details.appendChild(summary);
-  li.appendChild(details);
-  summary.addEventListener("click", (e) => contextHandleClick(e, details, initialData.id));
+
+  if(data.length  <= 1 ) {
+    return
+  }
+
+  data.forEach((path) => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+
+    a.innerHTML = path?.name;
+    a.href = baseUrl + "/explore.html?id=" + path?.id;
+
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+
+  pathContainer.appendChild(ul);
+}
 
 
-  populateLevel(details, initialData);
-  ul.appendChild(li);
-
-  document.getElementById("structureMenu").appendChild(ul);
-
-  const entriesWrapper = document.getElementById("contents");
-
-  // add listener
+async function getPath(id) {
+  const response = await fetch(`${apiUrl}${apiVersion}${id}/pathList`);
+  const data = await response.json();
+  return data;
 }
