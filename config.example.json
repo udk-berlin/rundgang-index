@@ -1,0 +1,13 @@
+{
+    "name":"rundgang/index",
+    "baseUrl":"https://index.example.org",
+    "api": {
+        "rootId": "!somematrixroomid:matrix.example.org",
+        "url": "https://api.example.org",
+        "version": "/api/v1/"
+    },
+    "hiddenAccounts": [
+        "@username:matrix.example.org",
+        "@username"
+      ]
+}
