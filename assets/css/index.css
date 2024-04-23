@@ -336,6 +336,10 @@ main ul > li + li {
 }
 */
 
+main #structureMenu ul {
+  list-style-type: none;
+}
+
 main .grid.column {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
