@@ -69,24 +69,41 @@ export async function iniExplore() {
   if(!id) return;
 
 
+  const exploreContent = document.getElementById("exploreContent");
+
+
+
+  const itemsWrapper = document.createElement("section")
+  itemsWrapper.id = "exploreItems";
+  const contextWrapper = document.createElement("section")
+  contextWrapper.id = "exploreContexts";
+
+
+
 
   populatePath(await getPath(id));
   const level = await getLevel(id);
 
   if(level.item.length <= 0 && level.context.length <= 0) {
-    document.getElementById("exploreItems").innerHTML = '¯\\_(ツ)_/¯'
+    const code = document.createElement("code");
+    code.innerHTML = '¯\\_(ツ)_/¯'
+    itemsWrapper.appendChild(code);
     return
   }
-  populateContexts(level);
-  populateItems(document.getElementById("exploreItems"), level.item);
+  populateContexts(contextWrapper,level);
+  populateItems(itemsWrapper, level.item);
+
+
+  exploreContent.appendChild(contextWrapper);
+  exploreContent.appendChild(itemsWrapper);
+  
 
 
 }
 
-function populateContexts(data) {
+function populateContexts(contextContainer,data) {
 
 
-  const contextContainer = document.getElementById("exploreContexts");
   const ul = document.createElement("ul");
   let sortedContext = [...data.context].sort((a, b) => a.name.localeCompare(b.name));
   sortedContext.forEach((context) => {
