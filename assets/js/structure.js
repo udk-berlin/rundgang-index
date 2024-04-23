@@ -31,28 +31,30 @@ async function getLevel(id) {
 }
 
 function populateLevel(level, data) {
-  level.innerHTML = "";
+  if(level.querySelector("ul")) level.removeChild(level.querySelector("ul"));
   const ul = document.createElement("ul");
-  console.log(data)
-  const details = document.createElement("details");
-  const summary = document.createElement("summary");
-  summary.innerHTML = data?.name;
+
+
 
   let sortedContext = [...data.context].sort((a, b) => a.name.localeCompare(b.name));
   sortedContext.forEach((context) => {
     const li = document.createElement("li");
-    const a = document.createElement("a");
+    const details = document.createElement("details");
+    const summary = document.createElement("summary");
 
-    a.addEventListener("click", (e) => contextHandleClick(e, li, context?.id));
+    summary.addEventListener("click", (e) => contextHandleClick(e, details, context?.id));
 
-    a.innerHTML = context?.name;
-    li.appendChild(a);
+
+
+    
+    summary.innerHTML = context?.name;
+    details.appendChild(summary);
+    li.appendChild(details);
     ul.appendChild(li);
   });
 
-  details.appendChild(summary);
-  details.appendChild(ul);
-  level.appendChild(details);
+  
+  level.appendChild(ul);
 }
 
 function updateItemView(itemsContainer, items) {
@@ -89,7 +91,7 @@ function updateItemView(itemsContainer, items) {
 }
 
 async function contextHandleClick(element, parent, id) {
-  element.preventDefault();
+ // element.preventDefault();
 
 
   const data = await getLevel(id);
@@ -113,7 +115,14 @@ export async function iniStructure() {
 
   const ul = document.createElement("ul");
   const li = document.createElement("li");
-  populateLevel(li, initialData);
+  const details = document.createElement("details");
+  const summary = document.createElement("summary");
+  summary.innerHTML = initialData?.name;
+  details.appendChild(summary);
+  li.appendChild(details);
+
+
+  populateLevel(details, initialData);
   ul.appendChild(li);
 
   document.getElementById("structureMenu").appendChild(ul);
