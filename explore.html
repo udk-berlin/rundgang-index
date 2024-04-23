@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="author" content="medienhaus/" />
+    <meta name="description" content="rundgang/index" />
+    <meta name="keywords" content="rundgang, index, university, arts, berlin" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/x-icon" href="./favicon.ico" sizes="16x16 32x32" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" sizes="any" />
+    <link rel="mask-icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="license" href="//creativecommons.org/licenses/by-nc-nd/4.0" />
+    <link rel="stylesheet" type="text/css" href="./assets/css/index.css" />
+    <!--
+    <link rel="stylesheet" type="text/css" href="./assets/css/index.robert.css" />
+    <link rel="stylesheet" type="text/css" href="./assets/css/custom.css" />
+    -->
+    <title>rundgang/index</title>
+  </head>
+  <body>
+    <header>
+          <h1><a href="/">rundgang/index</a></h1>
+      <section>
+        <select>
+          <option>EN</option>
+          <option>DE</option>
+        </select>
+      </section>
+    </header>
+    <main>
+      <nav>
+        <ul>
+          <li><a href="/entries.html">entries</a></li>
+          <li><a href="/authors.html">authors</a></li>
+          <li><a class="active" href="/explore.html">explore</a></li>
+        </ul>
+        <!--
+        <br />
+        <section id="structureMenu"></section>
+        -->
+      </nav>
+      <section id="explore">
+        <section id="structureMenu"></section>
+        <section id="structureItems" class="grid column"></section>
+      </section>
+      <!--
+      <section id="structureItems" class="grid column"></section>
+      -->
+    </main>
+    <script type="module">
+      import * as main from './assets/js/explore.js';
+      main.iniStructure();
+    </script>
+  </body>
+</html>
