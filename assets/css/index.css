@@ -308,7 +308,7 @@ main form#search > input {
 }
 
 main form#search,
-main h3 {
+main section > h2:first-child {
   background-color: var(--color-background);
   display: flex;
   gap: calc(var(--margin) * 0.35);
