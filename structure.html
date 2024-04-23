@@ -14,6 +14,10 @@
     <link rel="mask-icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="license" href="//creativecommons.org/licenses/by-nc-nd/4.0" />
     <link rel="stylesheet" type="text/css" href="./assets/css/index.css" />
+    <!--
+    <link rel="stylesheet" type="text/css" href="./assets/css/index.robert.css" />
+    <link rel="stylesheet" type="text/css" href="./assets/css/custom.css" />
+    -->
     <title>rundgang/index</title>
   </head>
   <body>
@@ -26,23 +30,25 @@
         </select>
       </section>
     </header>
-    <main id="structure">
+    <main>
       <nav>
         <ul>
           <li><a href="/entries.html">entries</a></li>
           <li><a href="/authors.html">authors</a></li>
           <li><a class="active" href="/structure.html">structure</a></li>
         </ul>
-      </nav>
-      <section id="structureMenu">
         <!--
-        <form id="search">
-          <input type="search" name="search" placeholder="Search …">
-          <button type="reset">Clear</button>
-        </form>
+        <br />
+        <section id="structureMenu"></section>
         -->
-        <section id="structureItems"></section>
+      </nav>
+      <section id="structure">
+        <section id="structureMenu"></section>
+        <section id="structureItems" class="grid column"></section>
       </section>
+      <!--
+      <section id="structureItems" class="grid column"></section>
+      -->
     </main>
     <script type="module">
       import * as main from './assets/js/structure.js';

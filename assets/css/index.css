@@ -324,6 +324,7 @@ main h3 {
 
 main p {
   max-width: var(--width);
+  overflow-wrap: break-word;
 }
 
 main ul {
@@ -336,8 +337,35 @@ main ul > li + li {
 }
 */
 
-main #structureMenu ul {
+main #structure {
+  display: grid;
+  grid-gap: calc(var(--margin) * 2.8);
+  grid-template-columns: 24ch 1fr;
+}
+
+main #structure detail {
+  overflow-wrap: break-word;
+  word-wrap: break-all;
+}
+
+main #structure details > summary {
+  color: var(--color-medium-contrast);
+}
+
+main #structure details[open] > summary {
+  color: var(--color-foreground);
+}
+
+main #structure summary + ul {
+  padding-left: calc(var(--margin) * 1);
+}
+
+main #structure ul {
   list-style-type: none;
+}
+
+main #structureMenu > ul {
+  max-height: 100%;
 }
 
 main .grid.column {
@@ -363,7 +391,7 @@ nav > * + * {
 */
 
 nav {
-  width: 20ch;
+  width: 16ch;
 }
 
 nav a:link {
@@ -428,6 +456,11 @@ nav {
     margin-top: -1.4rem;
     padding-top: calc(var(--margin) * 1.4);
     top: 0;
+  }
+  main #structure {
+    grid-auto-flow: row;
+    grid-gap: calc(var(--margin) * 1.4);
+    grid-template-columns: unset;
   }
   /*
   nav {
