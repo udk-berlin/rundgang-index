@@ -73,6 +73,10 @@ export async function iniExplore() {
   populatePath(await getPath(id));
   const level = await getLevel(id);
 
+  if(level.item.length <= 0 && level.context.length <= 0) {
+    document.getElementById("exploreItems").innerHTML = '¯\\_(ツ)_/¯'
+    return
+  }
   populateContexts(level);
   populateItems(document.getElementById("exploreItems"), level.item);
 
@@ -80,7 +84,7 @@ export async function iniExplore() {
 }
 
 function populateContexts(data) {
-  console.log(data)
+
 
   const contextContainer = document.getElementById("exploreContexts");
   const ul = document.createElement("ul");
