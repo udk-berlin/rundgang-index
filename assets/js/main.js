@@ -151,7 +151,7 @@ export async function iniAuthors() {
   // add listener
 
   document
-    .querySelector("#searchContents > input")
+    .querySelector("#search > input")
     .addEventListener("input", (e) => {
       search(allAuthors, e.target.value);
     });
