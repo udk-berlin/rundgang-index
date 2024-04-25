@@ -2,31 +2,23 @@ let config;
 let apiUrl;
 let baseUrl;
 
+
+
 let allEntries = [];
 
-let selectedLanguage = "DEFAULT";
+let selectedLanguage = "DE";
 
 let excludedAccounts = [
 ];
 
-async function fetchGraphQL(query) {
-  const req = await fetch(apiUrl + "/graphql", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ operationName: null, variables: {}, query: query }),
-  });
 
-  const data = await req.json();
-  return data?.data;
-}
 
 async function iniEntryPage() {
   const response = await fetch("./config.json");
   config = await response.json();
   excludedAccounts = config.hiddenAccounts;
   apiUrl = config.api.url;
+  const apiVersion = config.api.version;
   baseUrl = config.baseUrl;
 
   
@@ -35,13 +27,11 @@ async function iniEntryPage() {
 
   if (!id) return;
 
-  const call = await fetchGraphQL(
-    '{  entry(id: "' +
-      id +
-      '") {    name    id    thumbnail    description {      language      content    }    origin {      application {        name      }      authors {        name        id      }    }    parents {      name      id    }    content {      name      id    }    item {      name      id      thumbnail    }    context {      name      id      thumbnail    }  }}',
-  );
 
-  const entryData = call?.entry;
+  const responseEntry = await fetch(apiUrl + apiVersion + id);
+  const entryData = await responseEntry.json();
+
+
 
   if (!entryData) return;
 
@@ -61,6 +51,9 @@ async function iniEntryPage() {
 
   headerContainer.querySelector("aside >  h2").innerHTML = entryData?.name;
 
+
+
+
   if (!entryData?.thumbnail) {
     headerContainer.querySelector("img").remove();
   } else {
@@ -72,20 +65,21 @@ async function iniEntryPage() {
   parentsContainer.innerHTML = "<h3>Can be found in: </h3>";
   const parentsList = document.createElement("ul");
   parentsContainer.appendChild(parentsList);
-  entryData?.parents.forEach((parent) => {
+  entryData?.parents.forEach(async (parent) => {
     const parentContainer = document.createElement("li");
     const parentLink = document.createElement("a");
-    parentLink.href = baseUrl + "/entry.html?id=" + parent.id;
-    parentLink.innerHTML = parent.name;
+    parentLink.href = baseUrl + "/entry.html?id=" + parent;
+    const parentCall = await fetch(apiUrl + apiVersion + parent);
+    const parentData = await parentCall.json();
+    parentLink.innerHTML = parentData.name;
+    console.log(parentData)
     parentContainer.appendChild(parentLink);
     parentsList.appendChild(parentContainer);
   });
 
   // Description
   const descriptionContainer = document.createElement("div");
-  descriptionContainer.innerHTML = entryData?.description?.find(
-    ({ language }) => language === selectedLanguage,
-  )?.content;
+  descriptionContainer.innerHTML = entryData?.description[selectedLanguage]
 
   // Authors
   const authorsContainer = document.createElement("div");
@@ -96,30 +90,60 @@ async function iniEntryPage() {
     if (!author) return;
     if (author?.name?.lenght < 1) return;
     if (excludedAccounts.some((f) => author?.id.includes(f))) return;
-
+  
     const authorContainer = document.createElement("li");
     const authorLink = document.createElement("a");
     authorLink.href = baseUrl + "/author.html?id=" + author?.id;
     authorLink.innerHTML = author?.name;
     authorContainer.appendChild(authorLink);
     authorsList.appendChild(authorContainer);
+
+
+
   });
 
   headerInfoContainer.appendChild(parentsContainer);
-  if (!authorsList.innerHTML === "") {
+
     headerInfoContainer.appendChild(authorsContainer);
-  }
+  
+
+
+
+  // created
+  const created = document.createElement("div")
+  created.innerHTML = "<h3>Created: </h3>" + "xx/xx/xxxx";
+  headerInfoContainer.appendChild(created);
+
+
   if (descriptionContainer.innerHTML !== "undefined") {
     headerInfoContainer.appendChild(descriptionContainer);
   }
 
+
   // Contents
 
-  if (entryData?.content?.length <= 0) {
-    contentsContainer.remove();
+
+
+  const contentCall = await fetch(apiUrl + apiVersion + id + "/render/json");
+  const contentData = await contentCall.json();
+
+  console.log(contentData)
+
+  if(contentData?.languages[selectedLanguage]?.content) {
+    console.log(contentData?.languages[selectedLanguage]?.content)
+    Object.keys(contentData?.languages[selectedLanguage]?.content).forEach((key) => {
+      console.log(contentData?.languages[selectedLanguage]?.content[key])
+      const contentContainer = document.createElement("div");
+      contentContainer.innerHTML = contentData?.languages[selectedLanguage]?.content[key]?.formatted_content;
+      contentsContainer.appendChild(contentContainer);
+
+    });
+    
   }
 
-  // will be added later
+
+
+
 
   // Items
   entryData?.item?.forEach((item) => {
