@@ -122,25 +122,27 @@ async function iniEntryPage() {
 
   // Contents
 
-
-
-  const contentCall = await fetch(apiUrl + apiVersion + id + "/render/json");
-  const contentData = await contentCall.json();
-
-  console.log(contentData)
-
-  if(contentData?.languages[selectedLanguage]?.content) {
-    console.log(contentData?.languages[selectedLanguage]?.content)
-    Object.keys(contentData?.languages[selectedLanguage]?.content).forEach((key) => {
-      console.log(contentData?.languages[selectedLanguage]?.content[key])
-      const contentContainer = document.createElement("div");
-      contentContainer.innerHTML = contentData?.languages[selectedLanguage]?.content[key]?.formatted_content;
-      contentsContainer.appendChild(contentContainer);
-
-    });
+  if(entryData.type === 'item') {
     
-  }
+    const contentCall = await fetch(apiUrl + apiVersion + id + "/render/json");
+    const contentData = await contentCall.json();
 
+    console.log(contentData)
+
+    if(contentData?.languages[selectedLanguage]?.content) {
+      console.log(contentData?.languages[selectedLanguage]?.content)
+      Object.keys(contentData?.languages[selectedLanguage]?.content).forEach((key) => {
+        console.log(contentData?.languages[selectedLanguage]?.content[key])
+        const contentContainer = document.createElement("div");
+        contentContainer.innerHTML = contentData?.languages[selectedLanguage]?.content[key]?.formatted_content;
+        contentsContainer.appendChild(contentContainer);
+
+      });
+      
+    }
+
+
+  }
 
 
 
