@@ -340,7 +340,7 @@ main ul > li + li {
 main #structure {
   display: grid;
   grid-gap: calc(var(--margin) * 2.8);
-  grid-template-columns: 24ch 1fr;
+  grid-template-columns: minmax(max-content, 50%) 1fr;
 }
 
 main #structure detail {
@@ -364,10 +364,8 @@ main #structure ul {
   list-style-type: none;
 }
 
-main #exploreContent {
-  display: grid;
-  grid-gap: calc(var(--margin) * 2.8);
-  grid-template-columns: max-content 1fr;
+main #exploreContent > *:not(:empty) + * {
+  margin-top: calc(var(--margin) * 1.4);
 }
 
 /*
@@ -376,9 +374,22 @@ main #exploreContexts:empty {
 }
 */
 
+main #exploreContexts {
+  max-height: 100%;
+}
+
+main #explorePath:not(:empty) {
+  background-color: var(--color-background);
+  padding-bottom: calc(var(--margin) * 1.4);
+  position: sticky;
+  top: 4.2rem;
+}
+
+/*
 main #explorePath + * {
   margin-top: calc(var(--margin) * 1.4);
 }
+*/
 
 main #explorePath > ul {
   max-height: 100%;
@@ -437,7 +448,7 @@ nav {
 
 .grid.column {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(24ch, 1fr));
   grid-gap: calc(var(--margin) * 1.4);
 }
 
@@ -485,6 +496,14 @@ nav {
     grid-auto-flow: row;
     grid-gap: calc(var(--margin) * 1.4);
     grid-template-columns: unset;
+  }
+  main #explorePath:not(:empty) {
+    background-color: var(--color-background);
+    margin-top: -1.4rem;
+    padding-top: calc(var(--margin) * 1.4);
+    padding-bottom: calc(var(--margin) * 1.4);
+    position: sticky;
+    top: 0;
   }
   main #structure {
     grid-auto-flow: row;
