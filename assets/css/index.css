@@ -337,6 +337,7 @@ main ul > li + li {
 }
 */
 
+/*
 main #structure {
   display: grid;
   grid-gap: calc(var(--margin) * 2.8);
@@ -363,6 +364,7 @@ main #structure summary + ul {
 main #structure ul {
   list-style-type: none;
 }
+*/
 
 main #exploreContent > *:not(:empty) + * {
   margin-top: calc(var(--margin) * 1.4);
@@ -505,11 +507,13 @@ nav {
     position: sticky;
     top: 0;
   }
+  /*
   main #structure {
     grid-auto-flow: row;
     grid-gap: calc(var(--margin) * 1.4);
     grid-template-columns: unset;
   }
+  */
   /*
   nav {
     flex-direction: row;
