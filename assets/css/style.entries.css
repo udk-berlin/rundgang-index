@@ -1,0 +1,20 @@
+main form#search > input {
+  width: 100%;
+}
+
+main form#search {
+  background-color: var(--color-background);
+  display: flex;
+  gap: calc(var(--margin) * 0.35);
+  padding-bottom: calc(var(--margin) * 1.4);
+  position: sticky;
+  top: 4.2rem;
+}
+
+@media (max-width: 768px) {
+  main form#search {
+    margin-top: -1.4rem;
+    padding-top: calc(var(--margin) * 1.4);
+    top: 0;
+  }
+}
