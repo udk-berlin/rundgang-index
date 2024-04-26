@@ -2,16 +2,11 @@ let config;
 let apiUrl;
 let baseUrl;
 
-
-
 let allEntries = [];
 
 let selectedLanguage = "DE";
 
-let excludedAccounts = [
-];
-
-
+let excludedAccounts = [];
 
 async function iniEntryPage() {
   const response = await fetch("./config.json");
@@ -21,25 +16,18 @@ async function iniEntryPage() {
   const apiVersion = config.api.version;
   baseUrl = config.baseUrl;
 
-  
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
 
   if (!id) return;
 
-
   const responseEntry = await fetch(apiUrl + apiVersion + id);
   const entryData = await responseEntry.json();
 
-
-
   if (!entryData) return;
-
 
   const sectionWrapper = document.createElement("section");
 
-
-  // const headerContainer = document.getElementById("entryHeader");
   const headerContainer = document.createElement("section");
   headerContainer.id = "header";
   headerContainer.classList.add("grid");
@@ -56,18 +44,15 @@ async function iniEntryPage() {
   article.appendChild(linkWrapper);
   headerContainer.appendChild(article);
 
-
   titelname.innerHTML = entryData?.name;
 
-  if(entryData?.thumbnail) {
+  if (entryData?.thumbnail) {
     img.src = entryData?.thumbnail;
     figure.appendChild(img);
-  
-  } 
+  }
   linkWrapper.appendChild(figure);
   linkWrapper.appendChild(titelname);
 
-  //const headerInfoContainer = headerContainer.querySelector("aside");
   const headerInfoContainer = document.createElement("aside");
   headerContainer.appendChild(headerInfoContainer);
 
@@ -89,21 +74,7 @@ async function iniEntryPage() {
   itemsContainer.classList.add("column");
   sectionWrapper.appendChild(itemsContainer);
 
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-  // Parents
+  // parents
   const parentsContainer = document.createElement("div");
   parentsContainer.innerHTML = "<h3>Published in: </h3>";
   const parentsList = document.createElement("ul");
@@ -120,24 +91,22 @@ async function iniEntryPage() {
     parentsList.appendChild(parentContainer);
   });
 
-
-
-  // Authors
+  // authors
   const authorsContainer = document.createElement("div");
 
-  if(entryData.type === 'item') {
+  if (entryData.type === "item") {
     authorsContainer.innerHTML = "<h3>Authors: </h3>";
   } else {
     authorsContainer.innerHTML = "<h3>Moderators: </h3>";
   }
-  
+
   const authorsList = document.createElement("ul");
   authorsContainer.appendChild(authorsList);
   entryData?.origin?.authors?.forEach((author) => {
     if (!author) return;
     if (author?.name?.lenght < 1) return;
     if (excludedAccounts.some((f) => author?.id.includes(f))) return;
-  
+
     const authorContainer = document.createElement("li");
     const authorLink = document.createElement("a");
     authorLink.href = baseUrl + "/author.html?id=" + author?.id;
@@ -146,61 +115,50 @@ async function iniEntryPage() {
     authorsList.appendChild(authorContainer);
   });
 
-  
-
-  if(authorsList.innerHTML.length > 0) {
+  if (authorsList.innerHTML.length > 0) {
     headerInfoContainer.appendChild(authorsContainer);
   }
-    
+
   headerInfoContainer.appendChild(parentsContainer);
 
-
-
   // created
-  const created = document.createElement("div")
+  const created = document.createElement("div");
   created.innerHTML = "<h3>Created on: </h3>" + "<time>01/01/1970</time>";
   headerInfoContainer.appendChild(created);
 
-
   if (entryData?.description[selectedLanguage]) {
-    descriptionSectionContainer.innerHTML = entryData?.description[selectedLanguage]
+    descriptionSectionContainer.innerHTML =
+      entryData?.description[selectedLanguage];
   } else {
     descriptionSectionContainer.remove();
   }
 
-
-  // Contents
-
-  if(entryData.type === 'item') {
-    
+  // contents
+  if (entryData.type === "item") {
     const contentCall = await fetch(apiUrl + apiVersion + id + "/render/json");
     const contentData = await contentCall.json();
 
-    if(contentData?.languages[selectedLanguage]?.content &&  Object.keys(contentData?.languages[selectedLanguage]?.content).length > 0) {
-
-      Object.keys(contentData?.languages[selectedLanguage]?.content).forEach((key) => {
-
-        // const contentContainer = document.createElement("div");
-        // contentContainer.innerHTML = contentData?.languages[selectedLanguage]?.content[key]?.formatted_content;
-        // contentsContainer.appendChild(contentContainer);
-
-        contentsContainer.insertAdjacentHTML('beforeend',contentData?.languages[selectedLanguage]?.content[key]?.formatted_content)
-
-      });
-      
+    if (
+      contentData?.languages[selectedLanguage]?.content &&
+      Object.keys(contentData?.languages[selectedLanguage]?.content).length > 0
+    ) {
+      Object.keys(contentData?.languages[selectedLanguage]?.content).forEach(
+        (key) => {
+          contentsContainer.insertAdjacentHTML(
+            "beforeend",
+            contentData?.languages[selectedLanguage]?.content[key]
+              ?.formatted_content,
+          );
+        },
+      );
     } else {
       contentsContainer.remove();
     }
-
-
-  }else {
+  } else {
     contentsContainer.remove();
   }
 
-
-
-
-  // Items
+  // items
   entryData?.item?.forEach((item) => {
     const entryContainer = document.createElement("article");
     const entryLink = document.createElement("a");
@@ -214,14 +172,12 @@ async function iniEntryPage() {
       const entryImg = document.createElement("img");
       entryImg.src = item?.thumbnail;
       entryImgContainer.appendChild(entryImg);
-      
     }
     entryLink.appendChild(entryImgContainer);
     entryLink.href = baseUrl + "/entry.html?id=" + item.id;
 
     entryInfoContainer.innerHTML = item.name;
 
-    
     entryLink.appendChild(entryInfoContainer);
 
     entryContainer.appendChild(entryLink);
@@ -233,18 +189,16 @@ async function iniEntryPage() {
     itemsContainer.remove();
   }
 
-  // Contexts
+  // contexts
   const entryUlContainer = document.createElement("ul");
   entryUlContainer.innerHTML = "<h3>Sub-Contexts: </h3>";
   entryData?.context?.forEach((context) => {
     const entryContainer = document.createElement("li");
     const entryLink = document.createElement("a");
 
-
     entryLink.href = baseUrl + "/entry.html?id=" + context?.id;
 
     entryLink.innerHTML = context?.name;
-
 
     entryContainer.appendChild(entryLink);
 
@@ -257,6 +211,5 @@ async function iniEntryPage() {
     contextsContainer.remove();
   }
 
-
-  document.body.querySelector('main').appendChild(sectionWrapper);
+  document.body.querySelector("main").appendChild(sectionWrapper);
 }
