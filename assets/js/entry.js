@@ -141,10 +141,13 @@ async function iniEntryPage() {
 
   });
 
-  headerInfoContainer.appendChild(parentsContainer);
-
-    headerInfoContainer.appendChild(authorsContainer);
   
+
+  if(entryData?.origin?.authors?.length > 0) {
+    headerInfoContainer.appendChild(authorsContainer);
+  }
+    
+  headerInfoContainer.appendChild(parentsContainer);
 
 
 
