@@ -103,7 +103,7 @@ async function iniEntryPage() {
 
   // Parents
   const parentsContainer = document.createElement("div");
-  parentsContainer.innerHTML = "<h3>contextualized in: </h3>";
+  parentsContainer.innerHTML = "<h3>Published in: </h3>";
   const parentsList = document.createElement("ul");
   parentsContainer.appendChild(parentsList);
   entryData?.parents.forEach(async (parent) => {
@@ -153,7 +153,7 @@ async function iniEntryPage() {
 
   // created
   const created = document.createElement("div")
-  created.innerHTML = "<h3>Created: </h3>" + "<time>01/01/1970</time>";
+  created.innerHTML = "<h3>Created on: </h3>" + "<time>01/01/1970</time>";
   headerInfoContainer.appendChild(created);
 
 
