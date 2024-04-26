@@ -1,0 +1,14 @@
+/*
+main section > section + section {
+  margin-top: calc(var(--margin) * 1.4);
+}
+
+main section > section#contents > * + * {
+  margin-top: calc(var(--margin) * 0.7);
+}
+*/
+
+main section > section + section,
+main section > section#contents > * + * {
+  margin-top: calc(var(--margin) * 1.4);
+}
