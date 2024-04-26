@@ -42,6 +42,8 @@ async function iniEntryPage() {
   // const headerContainer = document.getElementById("entryHeader");
   const headerContainer = document.createElement("section");
   headerContainer.id = "header";
+  headerContainer.classList.add("grid");
+  headerContainer.classList.add("column");
   sectionWrapper.appendChild(headerContainer);
 
   const article = document.createElement("article");
@@ -51,7 +53,7 @@ async function iniEntryPage() {
 
   
   headerContainer.appendChild(article);
-  article.appendChild(titelname);
+
 
   titelname.innerHTML = entryData?.name;
 
@@ -60,7 +62,7 @@ async function iniEntryPage() {
     figure.appendChild(img);
     article.appendChild(figure);
   } 
-
+  article.appendChild(titelname);
 
   //const headerInfoContainer = headerContainer.querySelector("aside");
   const headerInfoContainer = document.createElement("aside");
@@ -116,9 +118,7 @@ async function iniEntryPage() {
     parentsList.appendChild(parentContainer);
   });
 
-  // Description
-  const descriptionContainer = document.createElement("div");
-  descriptionContainer.innerHTML = entryData?.description[selectedLanguage]
+
 
   // Authors
   const authorsContainer = document.createElement("div");
@@ -154,9 +154,10 @@ async function iniEntryPage() {
   headerInfoContainer.appendChild(created);
 
 
-  if (descriptionContainer.innerHTML !== "undefined") {
-
-    descriptionSectionContainer.appendChild(descriptionContainer);
+  if (entryData?.description[selectedLanguage]) {
+    descriptionSectionContainer.innerHTML = entryData?.description[selectedLanguage]
+  } else {
+    descriptionSectionContainer.remove();
   }
 
 
@@ -171,9 +172,11 @@ async function iniEntryPage() {
 
       Object.keys(contentData?.languages[selectedLanguage]?.content).forEach((key) => {
 
-        const contentContainer = document.createElement("div");
-        contentContainer.innerHTML = contentData?.languages[selectedLanguage]?.content[key]?.formatted_content;
-        contentsContainer.appendChild(contentContainer);
+        // const contentContainer = document.createElement("div");
+        // contentContainer.innerHTML = contentData?.languages[selectedLanguage]?.content[key]?.formatted_content;
+        // contentsContainer.appendChild(contentContainer);
+
+        contentsContainer.insertAdjacentHTML('beforeend',contentData?.languages[selectedLanguage]?.content[key]?.formatted_content)
 
       });
       
