@@ -144,14 +144,11 @@ async function iniEntryPage() {
     authorLink.innerHTML = author?.name;
     authorContainer.appendChild(authorLink);
     authorsList.appendChild(authorContainer);
-
-
-
   });
 
   
 
-  if(entryData?.origin?.authors?.length > 0) {
+  if(authorsList.innerHTML.length > 0) {
     headerInfoContainer.appendChild(authorsContainer);
   }
     
