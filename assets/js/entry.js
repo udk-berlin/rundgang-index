@@ -103,7 +103,7 @@ async function iniEntryPage() {
 
   // Parents
   const parentsContainer = document.createElement("div");
-  parentsContainer.innerHTML = "<h3>Can be found in: </h3>";
+  parentsContainer.innerHTML = "<h3>contextualized in: </h3>";
   const parentsList = document.createElement("ul");
   parentsContainer.appendChild(parentsList);
   entryData?.parents.forEach(async (parent) => {
