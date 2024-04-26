@@ -62,8 +62,9 @@ async function iniEntryPage() {
   if(entryData?.thumbnail) {
     img.src = entryData?.thumbnail;
     figure.appendChild(img);
-    linkWrapper.appendChild(figure);
+  
   } 
+  linkWrapper.appendChild(figure);
   linkWrapper.appendChild(titelname);
 
   //const headerInfoContainer = headerContainer.querySelector("aside");
@@ -205,13 +206,14 @@ async function iniEntryPage() {
       const entryImg = document.createElement("img");
       entryImg.src = item?.thumbnail;
       entryImgContainer.appendChild(entryImg);
+      
     }
-
+    entryLink.appendChild(entryImgContainer);
     entryLink.href = baseUrl + "/entry.html?id=" + item.id;
 
     entryInfoContainer.innerHTML = item.name;
 
-    entryLink.appendChild(entryImgContainer);
+    
     entryLink.appendChild(entryInfoContainer);
 
     entryContainer.appendChild(entryLink);
