@@ -79,15 +79,17 @@ async function iniEntryPage() {
   contentsContainer.id = "contents";
   sectionWrapper.appendChild(contentsContainer);
 
+  const contextsContainer = document.createElement("section");
+  contextsContainer.id = "contexts";
+  sectionWrapper.appendChild(contextsContainer);
+
   const itemsContainer = document.createElement("section");
   itemsContainer.id = "items";
   itemsContainer.classList.add("grid");
   itemsContainer.classList.add("column");
   sectionWrapper.appendChild(itemsContainer);
 
-  const contextsContainer = document.createElement("section");
-  contextsContainer.id = "contexts";
-  sectionWrapper.appendChild(contextsContainer);
+
 
 
 
@@ -122,7 +124,13 @@ async function iniEntryPage() {
 
   // Authors
   const authorsContainer = document.createElement("div");
-  authorsContainer.innerHTML = "<h3>Authors: </h3>";
+
+  if(entryData.type === 'item') {
+    authorsContainer.innerHTML = "<h3>Authors: </h3>";
+  } else {
+    authorsContainer.innerHTML = "<h3>Moderators: </h3>";
+  }
+  
   const authorsList = document.createElement("ul");
   authorsContainer.appendChild(authorsList);
   entryData?.origin?.authors?.forEach((author) => {
