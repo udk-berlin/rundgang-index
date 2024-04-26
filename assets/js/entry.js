@@ -235,6 +235,7 @@ async function iniEntryPage() {
 
   // Contexts
   const entryUlContainer = document.createElement("ul");
+  entryUlContainer.innerHTML = "<h3>Sub-Contexts: </h3>";
   entryData?.context?.forEach((context) => {
     const entryContainer = document.createElement("li");
     const entryLink = document.createElement("a");
