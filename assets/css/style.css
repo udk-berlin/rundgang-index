@@ -62,7 +62,11 @@ body {
 
 a:link {
   color: var(--color-foreground);
+  /*
   text-decoration: none;
+  */
+  text-decoration: underline;
+  text-decoration-style: dotted;
 }
 
 a:visited {
@@ -189,9 +193,15 @@ main {
   padding-bottom: calc(var(--margin) * 2);
 }
 
+/*
 main a:link {
   text-decoration: underline;
   text-decoration-style: dotted;
+}
+*/
+
+main article a:link {
+  text-decoration: none;
 }
 
 main article > * {
@@ -283,10 +293,12 @@ nav {
   width: 16ch;
 }
 
+/*
 nav a:link {
   text-decoration: underline;
   text-decoration-style: dotted;
 }
+*/
 
 nav ul {
   position: sticky;
@@ -300,9 +312,11 @@ nav ul {
   grid-gap: calc(var(--margin) * 1.4);
 }
 
+/*
 .grid.column a:link {
   text-decoration: none;
 }
+*/
 
 @keyframes init {
   from {
