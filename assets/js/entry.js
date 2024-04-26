@@ -35,30 +35,69 @@ async function iniEntryPage() {
 
   if (!entryData) return;
 
-  const headerContainer = document.getElementById("entryHeader");
-  const headerInfoContainer = headerContainer.querySelector("aside");
-  const contentsContainer = document.getElementById("entryContents");
-  const itemsContainer = document.getElementById("items");
-  const contextsContainer = document.getElementById("contexts");
+
+  const sectionWrapper = document.createElement("section");
+
+
+  // const headerContainer = document.getElementById("entryHeader");
+  const headerContainer = document.createElement("section");
+  headerContainer.id = "header";
+  sectionWrapper.appendChild(headerContainer);
+
+  const article = document.createElement("article");
+  const figure = document.createElement("figure");
+  const img = document.createElement("img");
+  const titelname = document.createElement("p");
+
+  
+  headerContainer.appendChild(article);
+  article.appendChild(titelname);
+
+  titelname.innerHTML = entryData?.name;
+
+  if(entryData?.thumbnail) {
+    img.src = entryData?.thumbnail;
+    figure.appendChild(img);
+    article.appendChild(figure);
+  } 
+
+
+  //const headerInfoContainer = headerContainer.querySelector("aside");
+  const headerInfoContainer = document.createElement("aside");
+  headerContainer.appendChild(headerInfoContainer);
+
+  const descriptionSectionContainer = document.createElement("section");
+  descriptionSectionContainer.id = "description";
+  sectionWrapper.appendChild(descriptionSectionContainer);
+
+  const contentsContainer = document.createElement("section");
+  contentsContainer.id = "contents";
+  sectionWrapper.appendChild(contentsContainer);
+
+  const itemsContainer = document.createElement("section");
+  itemsContainer.id = "items";
+  itemsContainer.classList.add("grid");
+  itemsContainer.classList.add("column");
+  sectionWrapper.appendChild(itemsContainer);
+
+  const contextsContainer = document.createElement("section");
+  contextsContainer.id = "contexts";
+  sectionWrapper.appendChild(contextsContainer);
 
   const itemsEntriesContainer = document.createElement("div");
   itemsContainer.appendChild(itemsEntriesContainer);
   itemsEntriesContainer.id = "contents";
 
-  const contextsEntriesContainer = document.createElement("div");
-  contextsContainer.appendChild(contextsEntriesContainer);
-  contextsEntriesContainer.id = "contextsEntries";
-
-  headerContainer.querySelector("aside >  h2").innerHTML = entryData?.name;
 
 
 
 
-  if (!entryData?.thumbnail) {
-    headerContainer.querySelector("img").remove();
-  } else {
-    headerContainer.querySelector("img").src = entryData?.thumbnail;
-  }
+
+
+
+
+  
+
 
   // Parents
   const parentsContainer = document.createElement("div");
@@ -72,7 +111,7 @@ async function iniEntryPage() {
     const parentCall = await fetch(apiUrl + apiVersion + parent);
     const parentData = await parentCall.json();
     parentLink.innerHTML = parentData.name;
-    console.log(parentData)
+
     parentContainer.appendChild(parentLink);
     parentsList.appendChild(parentContainer);
   });
@@ -111,12 +150,13 @@ async function iniEntryPage() {
 
   // created
   const created = document.createElement("div")
-  created.innerHTML = "<h3>Created: </h3>" + "xx/xx/xxxx";
+  created.innerHTML = "<h3>Created: </h3>" + "<time>01/01/1970</time>";
   headerInfoContainer.appendChild(created);
 
 
   if (descriptionContainer.innerHTML !== "undefined") {
-    headerInfoContainer.appendChild(descriptionContainer);
+
+    descriptionSectionContainer.appendChild(descriptionContainer);
   }
 
 
@@ -127,21 +167,23 @@ async function iniEntryPage() {
     const contentCall = await fetch(apiUrl + apiVersion + id + "/render/json");
     const contentData = await contentCall.json();
 
-    console.log(contentData)
+    if(contentData?.languages[selectedLanguage]?.content &&  Object.keys(contentData?.languages[selectedLanguage]?.content).length > 0) {
 
-    if(contentData?.languages[selectedLanguage]?.content) {
-      console.log(contentData?.languages[selectedLanguage]?.content)
       Object.keys(contentData?.languages[selectedLanguage]?.content).forEach((key) => {
-        console.log(contentData?.languages[selectedLanguage]?.content[key])
+
         const contentContainer = document.createElement("div");
         contentContainer.innerHTML = contentData?.languages[selectedLanguage]?.content[key]?.formatted_content;
         contentsContainer.appendChild(contentContainer);
 
       });
       
+    } else {
+      contentsContainer.remove();
     }
 
 
+  }else {
+    contentsContainer.remove();
   }
 
 
@@ -195,6 +237,8 @@ async function iniEntryPage() {
       entryImgContainer.appendChild(entryImg);
     }
 
+
+
     entryLink.href = baseUrl + "/entry.html?id=" + context?.id;
 
     entryInfoContainer.innerHTML = context?.name;
@@ -204,10 +248,13 @@ async function iniEntryPage() {
 
     entryContainer.appendChild(entryLink);
 
-    contextsEntriesContainer.appendChild(entryContainer);
+    contextsContainer.appendChild(entryContainer);
   });
 
   if (entryData?.context?.length <= 0) {
     contextsContainer.remove();
   }
+
+
+  document.body.querySelector('main').appendChild(sectionWrapper);
 }
