@@ -86,9 +86,6 @@ async function iniEntryPage() {
   contextsContainer.id = "contexts";
   sectionWrapper.appendChild(contextsContainer);
 
-  const itemsEntriesContainer = document.createElement("div");
-  itemsContainer.appendChild(itemsEntriesContainer);
-  itemsEntriesContainer.id = "contents";
 
 
 
@@ -217,7 +214,7 @@ async function iniEntryPage() {
 
     entryContainer.appendChild(entryLink);
 
-    itemsEntriesContainer.appendChild(entryContainer);
+    itemsContainer.appendChild(entryContainer);
   });
 
   if (entryData?.item?.length <= 0) {
