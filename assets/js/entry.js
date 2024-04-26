@@ -46,12 +46,14 @@ async function iniEntryPage() {
   headerContainer.classList.add("column");
   sectionWrapper.appendChild(headerContainer);
 
+  const linkWrapper = document.createElement("a");
+  linkWrapper.href = baseUrl + "/entry.html?id=" + id;
   const article = document.createElement("article");
   const figure = document.createElement("figure");
   const img = document.createElement("img");
   const titelname = document.createElement("p");
 
-  
+  article.appendChild(linkWrapper);
   headerContainer.appendChild(article);
 
 
@@ -60,9 +62,9 @@ async function iniEntryPage() {
   if(entryData?.thumbnail) {
     img.src = entryData?.thumbnail;
     figure.appendChild(img);
-    article.appendChild(figure);
+    linkWrapper.appendChild(figure);
   } 
-  article.appendChild(titelname);
+  linkWrapper.appendChild(titelname);
 
   //const headerInfoContainer = headerContainer.querySelector("aside");
   const headerInfoContainer = document.createElement("aside");
@@ -193,8 +195,8 @@ async function iniEntryPage() {
   entryData?.item?.forEach((item) => {
     const entryContainer = document.createElement("article");
     const entryLink = document.createElement("a");
-    const entryImgContainer = document.createElement("section");
-    const entryInfoContainer = document.createElement("section");
+    const entryImgContainer = document.createElement("figure");
+    const entryInfoContainer = document.createElement("p");
 
     if (item?.id?.includes("@donotuse")) return;
     if (!item?.name) return;
