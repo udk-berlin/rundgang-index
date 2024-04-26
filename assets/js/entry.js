@@ -237,34 +237,23 @@ async function iniEntryPage() {
   }
 
   // Contexts
+  const entryUlContainer = document.createElement("ul");
   entryData?.context?.forEach((context) => {
-    const entryContainer = document.createElement("article");
+    const entryContainer = document.createElement("li");
     const entryLink = document.createElement("a");
-    const entryImgContainer = document.createElement("section");
-    const entryInfoContainer = document.createElement("section");
-
-    if (context?.id?.includes("@donotuse")) return;
-    if (!context?.name) return;
-
-    if (context?.thumbnail) {
-      const entryImg = document.createElement("img");
-      entryImg.src = context?.thumbnail;
-      entryImgContainer.appendChild(entryImg);
-    }
-
 
 
     entryLink.href = baseUrl + "/entry.html?id=" + context?.id;
 
-    entryInfoContainer.innerHTML = context?.name;
+    entryLink.innerHTML = context?.name;
 
-    entryLink.appendChild(entryImgContainer);
-    entryLink.appendChild(entryInfoContainer);
 
     entryContainer.appendChild(entryLink);
 
-    contextsContainer.appendChild(entryContainer);
+    entryUlContainer.appendChild(entryContainer);
   });
+
+  contextsContainer.appendChild(entryUlContainer);
 
   if (entryData?.context?.length <= 0) {
     contextsContainer.remove();
