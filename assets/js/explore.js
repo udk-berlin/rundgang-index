@@ -65,7 +65,20 @@ export async function iniExplore() {
 
   if (!id) return;
 
-  const exploreContent = document.getElementById("exploreContent");
+  const sectionWrapper = document.createElement("section");
+
+  const pathContainer = document.createElement("section");
+  sectionWrapper.appendChild(pathContainer);
+
+  const exploreContent = document.createElement("section");
+  exploreContent.id = "exploreContent";
+  sectionWrapper.appendChild(exploreContent);
+  
+
+  const main = document.querySelector('main')
+  
+  
+
 
   const itemsWrapper = document.createElement("section");
   itemsWrapper.id = "exploreItems";
@@ -74,7 +87,8 @@ export async function iniExplore() {
   const contextWrapper = document.createElement("section");
   contextWrapper.id = "exploreContexts";
 
-  populatePath(await getPath(id));
+  
+  populatePath(await getPath(id),pathContainer);
   const level = await getLevel(id);
 
   if (level.item.length <= 0 && level.context.length <= 0) {
@@ -88,6 +102,8 @@ export async function iniExplore() {
 
   exploreContent.appendChild(contextWrapper);
   exploreContent.appendChild(itemsWrapper);
+
+  main.appendChild(sectionWrapper);
 }
 
 function populateContexts(contextContainer, data) {
@@ -106,11 +122,14 @@ function populateContexts(contextContainer, data) {
 
     contextContainer.appendChild(ul);
   });
+
+  
 }
 
-function populatePath(data) {
-  const pathContainer = document.getElementById("explorePath");
+function populatePath(data,pathContainer) {
+
   pathContainer.innerHTML = "";
+  pathContainer.id = 'explorePath'
 
   const ul = document.createElement("ul");
 
