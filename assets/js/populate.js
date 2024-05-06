@@ -4,7 +4,7 @@ let config;
 let apiUrl;
 let baseUrl;
 let apiVersion;
-
+let selectedLanguage = "DE";
 let id;
 
 let excludedAccounts = [];
@@ -15,38 +15,6 @@ async function getLevel(id) {
   return data;
 }
 
-function populateItems(itemsContainer, items) {
-  itemsContainer.innerHTML = "";
-  console.log(items);
-  items
-    ?.sort((a, b) => 0.5 - Math.random())
-    .forEach((entry, i) => {
-      const entryContainer = document.createElement("article");
-      const entryLink = document.createElement("a");
-      const entryImgContainer = document.createElement("figure");
-      const entryInfoContainer = document.createElement("p");
-
-      if (entry?.id?.includes("@donotuse")) return;
-      if (!entry?.name) return;
-
-      if (entry.thumbnail) {
-        const entryImg = document.createElement("img");
-        entryImg.src = entry.thumbnail;
-        entryImgContainer.appendChild(entryImg);
-      }
-
-      entryLink.href = baseUrl + "/entry.html?id=" + entry.id;
-
-      entryInfoContainer.innerHTML = entry.name;
-
-      entryLink.appendChild(entryImgContainer);
-      entryLink.appendChild(entryInfoContainer);
-
-      entryContainer.appendChild(entryLink);
-
-      itemsContainer.appendChild(entryContainer);
-    });
-}
 
 export async function ini(type) {
 
@@ -71,6 +39,8 @@ export async function ini(type) {
       return iniAuthors();
     case "entries":
       return iniEntries();
+    case "entry": 
+      return iniEntry();
   }
 }
 
@@ -98,14 +68,15 @@ function generateHTMLStructure(data, header = true) {
   
     const titleLink = document.createElement("a");
     titleLink.href = baseUrl + "/author.html?id=" + data.id;
-    if(data?.thumbnail) {
+
     
       const imgFigure = document.createElement("figure");
-      const img = document.createElement("img");
-      img.src = data.thumbnail;
-      imgFigure.appendChild(img);
-      titleLink.appendChild(imgFigure);
+      if(data?.thumbnail) {
+        const img = document.createElement("img");
+        img.src = data.thumbnail;
+        imgFigure.appendChild(img);
     }
+    titleLink.appendChild(imgFigure);
     const title = document.createElement("p");
     title.innerHTML = data.name;
     titleLink.appendChild(title);
@@ -115,8 +86,8 @@ function generateHTMLStructure(data, header = true) {
     if(data.authors || data.parents || data.created) {
       //metadata
   
-      const headerAside = document.createElement("aside"); 
-      headerContainer.appendChild(headerAside);
+
+      headerContainer.appendChild( generateMetaData(data) );
     }
   }
 
@@ -125,8 +96,17 @@ function generateHTMLStructure(data, header = true) {
     
   const descriptionContainer = document.createElement("section");
 
-  if (descriptionContainer.innerHTML.length > 0) {
-    sectionWrapper.appendChild(descriptionContainer);
+
+  if (data.hasOwnProperty('description')) {
+    const descriptionContainer = document.createElement("section");
+  
+    if (data.description.hasOwnProperty(selectedLanguage)) {
+      descriptionContainer.innerHTML = data.description[selectedLanguage];
+    }
+  
+    if (descriptionContainer.innerHTML.length > 0) {
+      sectionWrapper.appendChild(descriptionContainer);
+    }
   }
   
 
@@ -134,6 +114,23 @@ function generateHTMLStructure(data, header = true) {
 
   const contextsContainer = document.createElement("section");
   contextsContainer.id = "contexts";
+
+  const entryUlContainer = document.createElement("ul");
+  entryUlContainer.innerHTML = "<h3>Sub-Contexts: </h3>";
+  data?.context?.forEach((context) => {
+    const entryContainer = document.createElement("li");
+    const entryLink = document.createElement("a");
+
+    entryLink.href = baseUrl + "/entry.html?id=" + context?.id;
+
+    entryLink.innerHTML = context?.name;
+
+    entryContainer.appendChild(entryLink);
+
+    entryUlContainer.appendChild(entryContainer);
+  });
+
+  contextsContainer.appendChild(entryUlContainer);
 
 
 
@@ -187,6 +184,26 @@ function generateHTMLStructure(data, header = true) {
   //contents
   const contentContainer = document.createElement("section");
 
+   // contents
+   if (data.type === "item" && data.contentData) {
+
+
+    if (
+      data.contentData?.languages[selectedLanguage]?.content &&
+      Object.keys(data.contentData?.languages[selectedLanguage]?.content).length > 0
+    ) {
+      Object.keys(data.contentData?.languages[selectedLanguage]?.content).forEach(
+        (key) => {
+          contentContainer.insertAdjacentHTML(
+            "beforeend",
+            data.contentData?.languages[selectedLanguage]?.content[key]
+              ?.formatted_content,
+          );
+        },
+      );
+    } 
+  } 
+
   if (contentContainer.innerHTML.length > 0) {
     sectionWrapper.appendChild(contentContainer);
   }
@@ -205,6 +222,35 @@ function generateHTMLStructure(data, header = true) {
 }
 
 // ini functions
+
+
+async function iniEntry() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  if (!id) return;
+
+  const responseEntry = await fetch(apiUrl + apiVersion + id);
+  const entryData = await responseEntry.json();
+
+
+  if (!entryData) return;
+
+
+  const contentCall = await fetch(apiUrl + apiVersion + id + "/render/json");
+  const contentData = await contentCall.json();
+
+
+
+  entryData.contentData = contentData;
+
+
+  
+
+  const generatedStructure = generateHTMLStructure(entryData);
+  document.querySelector("main").appendChild(generatedStructure);
+
+}
 
 async function iniAuthor() {
   if (!id) return;
@@ -242,17 +288,17 @@ async function iniExplore() {
   const generatedStructure = generateHTMLStructure(data,false);
 
   if(generatedStructure.querySelector('#contexts')) {
+    generatedStructure.querySelector('#contexts').innerHTML = '';
    populateContextsExplore(generatedStructure.querySelector('#contexts'), data)
   }
 
   if (data.item?.length <= 0 && data.context?.length <= 0) {
-    console.log('no data')
     const code = document.createElement("code");
     code.innerHTML = "¯\\_(ツ)_/¯";
     const notFoundSection = document.createElement('section');
     notFoundSection.appendChild(code);
     generatedStructure.querySelector('section').appendChild(notFoundSection);
-    return;
+
   }
 
   document.querySelector("main").appendChild(generatedStructure);
@@ -472,7 +518,65 @@ async function getPath(id) {
 
 
 
+ function generateMetaData(entryData) {
+  const headerInfoContainer = document.createElement("aside");
 
+
+    // parents
+    const parentsContainer = document.createElement("div");
+    parentsContainer.innerHTML = "<h3>Published in: </h3>";
+    const parentsList = document.createElement("ul");
+    parentsContainer.appendChild(parentsList);
+    entryData?.parents.forEach(async (parent) => {
+      const parentContainer = document.createElement("li");
+      const parentLink = document.createElement("a");
+      parentLink.href = baseUrl + "/entry.html?id=" + parent;
+      const parentCall = await fetch(apiUrl + apiVersion + parent);
+      const parentData = await parentCall.json();
+      parentLink.innerHTML = parentData.name;
+  
+      parentContainer.appendChild(parentLink);
+      parentsList.appendChild(parentContainer);
+    });
+  
+    // authors
+    const authorsContainer = document.createElement("div");
+  
+    if (entryData.type === "item") {
+      authorsContainer.innerHTML = "<h3>Authors: </h3>";
+    } else {
+      authorsContainer.innerHTML = "<h3>Moderators: </h3>";
+    }
+  
+    const authorsList = document.createElement("ul");
+    authorsContainer.appendChild(authorsList);
+    entryData?.origin?.authors?.forEach((author) => {
+      if (!author) return;
+      if (author?.name?.lenght < 1) return;
+      if (excludedAccounts.some((f) => author?.id.includes(f))) return;
+  
+      const authorContainer = document.createElement("li");
+      const authorLink = document.createElement("a");
+      authorLink.href = baseUrl + "/author.html?id=" + author?.id;
+      authorLink.innerHTML = author?.name;
+      authorContainer.appendChild(authorLink);
+      authorsList.appendChild(authorContainer);
+    });
+  
+    if (authorsList.innerHTML.length > 0) {
+      headerInfoContainer.appendChild(authorsContainer);
+    }
+  
+    headerInfoContainer.appendChild(parentsContainer);
+  
+    // created
+    const created = document.createElement("div");
+    created.innerHTML = "<h3>Created on: </h3>" + "<time>01/01/1970</time>";
+    headerInfoContainer.appendChild(created);
+  
+   return headerInfoContainer
+
+ }
 
 async function fetchGraphQL(query) {
   const req = await fetch(apiUrl + "/graphql", {

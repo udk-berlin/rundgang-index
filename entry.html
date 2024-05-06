@@ -36,7 +36,9 @@
         </ul>
       </nav>
     </main>
-    <script src="./assets/js/entry.js"></script>
-    <script>iniEntryPage()</script>
+    <script type="module">
+      import * as main from './assets/js/populate.js';
+      main.ini('entry');
+    </script>
   </body>
 </html>
