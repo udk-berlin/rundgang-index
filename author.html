@@ -47,7 +47,9 @@
         <hr />
       </section>
     </main>
-    <script src="./assets/js/author.js"></script>
-    <script>iniAuthorPage()</script>
+    <script type="module">
+      import * as main from './assets/js/populate.js';
+      main.ini('author');
+    </script>
   </body>
 </html>

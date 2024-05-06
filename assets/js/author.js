@@ -20,7 +20,7 @@ async function fetchGraphQL(query) {
   return data?.data;
 }
 
-async function iniAuthorPage() {
+async function iniAuthor() {
 
   const response = await fetch("./config.json");
   config = await response.json();
