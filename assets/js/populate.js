@@ -53,13 +53,11 @@ export async function ini(type) {
   excludedAccounts = config.hiddenAccounts;
   apiUrl = config.api.url;
   baseUrl = config.baseUrl;
+  apiVersion = config.api.version;
 
 
   const params = new URLSearchParams(window.location.search);
   id = params.get("id");
-
-  if (!id) return;
-
 
 
   switch (type) {
@@ -70,101 +68,52 @@ export async function ini(type) {
   }
 }
 
-async function iniExplore() {
-  const response = await fetch("./config.json");
-  config = await response.json();
-  apiUrl = config.api.url;
-  apiVersion = config.api.version;
-  excludedAccounts = config.hiddenAccounts;
-  baseUrl = config.baseUrl;
 
-  const urlParams = new URLSearchParams(window.location.search);
-  id = urlParams.get("id");
 
-  if (!id) {
-    const response = await fetch(`${apiUrl}${apiVersion}`);
-    const data = await response.json();
-    id = data?.rootId;
-  }
-
-  if (!id) return;
+function generateHTMLStructure(data, header = true) {
 
   const sectionWrapper = document.createElement("section");
 
-  const pathContainer = document.createElement("section");
-  sectionWrapper.appendChild(pathContainer);
-
-  const exploreContent = document.createElement("section");
-  exploreContent.id = "exploreContent";
-  sectionWrapper.appendChild(exploreContent);
-  
-
-  const main = document.querySelector('main')
-  
-  
-
-
-  const itemsWrapper = document.createElement("section");
-  itemsWrapper.id = "exploreItems";
-  itemsWrapper.classList.add("grid");
-  itemsWrapper.classList.add("column");
-  const contextWrapper = document.createElement("section");
-  contextWrapper.id = "exploreContexts";
-
-  
-  populatePath(await getPath(id),pathContainer);
-  const level = await getLevel(id);
-
-  if (level.item.length <= 0 && level.context.length <= 0) {
-    const code = document.createElement("code");
-    code.innerHTML = "¯\\_(ツ)_/¯";
-    itemsWrapper.appendChild(code);
-    return;
+  if(data.path && data.path.length > 1) {
+    const pathContainer = document.createElement("section");
+    populatePath(data.path,pathContainer)
+    sectionWrapper.appendChild(pathContainer);
   }
-  populateContexts(contextWrapper, level);
-  populateItems(itemsWrapper, level.item);
 
-  exploreContent.appendChild(contextWrapper);
-  exploreContent.appendChild(itemsWrapper);
-
-  main.appendChild(sectionWrapper);
-}
-
-function generateHTMLStructure(data, path) {
-
-  const sectionWrapper = document.createElement("section");
-
-  const headerContainer = document.createElement("section");
-  sectionWrapper.appendChild(headerContainer);
-  headerContainer.id = "header";
-  headerContainer.classList.add("grid");
-  headerContainer.classList.add("column");
-
-  const headerArticle = document.createElement("article");
-  headerContainer.appendChild(headerArticle);
-
-  const titleLink = document.createElement("a");
-  titleLink.href = baseUrl + "/author.html?id=" + data.id;
-  if(data?.thumbnail) {
+  if(header) {
+    const headerContainer = document.createElement("section");
+    sectionWrapper.appendChild(headerContainer);
+    headerContainer.id = "header";
+    headerContainer.classList.add("grid");
+    headerContainer.classList.add("column");
   
-    const imgFigure = document.createElement("figure");
-    const img = document.createElement("img");
-    img.src = data.thumbnail;
-    imgFigure.appendChild(img);
-    titleLink.appendChild(imgFigure);
+    const headerArticle = document.createElement("article");
+    headerContainer.appendChild(headerArticle);
+  
+    const titleLink = document.createElement("a");
+    titleLink.href = baseUrl + "/author.html?id=" + data.id;
+    if(data?.thumbnail) {
+    
+      const imgFigure = document.createElement("figure");
+      const img = document.createElement("img");
+      img.src = data.thumbnail;
+      imgFigure.appendChild(img);
+      titleLink.appendChild(imgFigure);
+    }
+    const title = document.createElement("p");
+    title.innerHTML = data.name;
+    titleLink.appendChild(title);
+  
+    headerArticle.appendChild(titleLink);
+  
+    if(data.authors || data.parents || data.created) {
+      //metadata
+  
+      const headerAside = document.createElement("aside"); 
+      headerContainer.appendChild(headerAside);
+    }
   }
-  const title = document.createElement("p");
-  title.innerHTML = data.name;
-  titleLink.appendChild(title);
 
-  headerArticle.appendChild(titleLink);
-
-  if(data.authors || data.parents || data.created) {
-    //metadata
-
-    const headerAside = document.createElement("aside"); 
-    headerContainer.appendChild(headerAside);
-  }
 
 
     
@@ -178,6 +127,10 @@ function generateHTMLStructure(data, path) {
   // contexts
 
   const contextsContainer = document.createElement("section");
+  contextsContainer.id = "contexts";
+
+
+
 
 
   if (data?.context?.length > 0) {
@@ -245,10 +198,11 @@ function generateHTMLStructure(data, path) {
 
 }
 
+// ini functions
 
 async function iniAuthor() {
+  if (!id) return;
 
-  
   const call = await fetchGraphQL(
     '{  user(id: "' +
       id +
@@ -260,12 +214,58 @@ async function iniAuthor() {
   if (!userData) return;
 
   const generatedStructure = generateHTMLStructure(userData);
-
   document.querySelector("main").appendChild(generatedStructure);
 }
 
+async function iniExplore() {
+  let data = {}
+  if (!id) {
+    const response = await fetch(`${apiUrl}${apiVersion}`);
+    const d = await response.json();
+    data = d;
+    id = d.rootId;
+  }
 
-function populateContexts(contextContainer, data) {
+  const response = await fetch(`${apiUrl}${apiVersion}${id}`);
+  const d = await response.json();
+  data = d;
+  data.path = await getPath(id);
+
+
+
+
+
+  if (!id) return;
+
+
+
+  const generatedStructure = generateHTMLStructure(data,false);
+  document.querySelector("main").appendChild(generatedStructure);
+
+  console.log(generatedStructure)
+  if(generatedStructure.querySelector('#contexts')) {
+   populateContextsExplore(generatedStructure.querySelector('#contexts'), data)
+  }
+
+  if (data.item?.length <= 0 && data.context?.length <= 0) {
+    console.log('no data')
+    const code = document.createElement("code");
+    code.innerHTML = "¯\\_(ツ)_/¯";
+    const notFoundSection = document.createElement('section');
+    notFoundSection.appendChild(code);
+    generatedStructure.querySelector('section').appendChild(notFoundSection);
+    return;
+  }
+
+
+  return
+}
+
+
+// HELPER FUNCTIONS
+
+function populateContextsExplore(contextContainer, data) {
+  if(!data.context) return 
   const ul = document.createElement("ul");
   let sortedContext = [...data.context].sort((a, b) =>
     a.name.localeCompare(b.name),
@@ -318,7 +318,7 @@ async function getPath(id) {
 
 
 
-// HELPER FUNCTIONS
+
 
 async function fetchGraphQL(query) {
   const req = await fetch(apiUrl + "/graphql", {
