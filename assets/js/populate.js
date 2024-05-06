@@ -67,7 +67,12 @@ function generateHTMLStructure(data, header = true) {
     headerContainer.appendChild(headerArticle);
   
     const titleLink = document.createElement("a");
-    titleLink.href = baseUrl + "/author.html?id=" + data.id;
+    if(id.includes('@')) {
+      titleLink.href = baseUrl + "/author.html?id=" + data.id;
+    } else {
+      titleLink.href = baseUrl + "/entry.html?id=" + data.id;
+    }
+   
 
     
       const imgFigure = document.createElement("figure");
