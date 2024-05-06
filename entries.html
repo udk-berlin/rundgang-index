@@ -35,17 +35,10 @@
           <li><a href="/explore.html">explore</a></li>
         </ul>
       </nav>
-      <section>
-        <form id="search">
-          <input type="search" name="search" placeholder="Search …">
-          <button type="reset">Clear</button>
-        </form>
-        <section id="contents" class="grid column"></section>
-      </section>
     </main>
     <script type="module">
-      import * as main from './assets/js/main.js';
-      main.iniEntries();
+      import * as main from './assets/js/populate.js';
+      main.ini('entries');
     </script>
   </body>
 </html>

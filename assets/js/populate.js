@@ -1,3 +1,5 @@
+import LazyLoad from "../../assets/lib/vanilla-lazyload/vanilla-lazyload@19.0.3.js";
+
 let config;
 let apiUrl;
 let baseUrl;
@@ -67,6 +69,8 @@ export async function ini(type) {
       return iniAuthor();
     case "authors":
       return iniAuthors();
+    case "entries":
+      return iniEntries();
   }
 }
 
@@ -237,8 +241,6 @@ async function iniExplore() {
 
   const generatedStructure = generateHTMLStructure(data,false);
 
-
-  console.log(generatedStructure)
   if(generatedStructure.querySelector('#contexts')) {
    populateContextsExplore(generatedStructure.querySelector('#contexts'), data)
   }
@@ -263,29 +265,9 @@ async function iniExplore() {
   const allAuthors = [];
 
 
-  const section = document.createElement("section");
-  const searchForm = document.createElement("form");
-  searchForm.id = "search";
-  const searchInput = document.createElement("input");
-  searchInput.type = "search";
-  searchInput.name = "search";
-  searchInput.placeholder = "Search …";
-  const searchButton = document.createElement("button");
-  searchButton.type = "reset";
-  searchButton.innerHTML = "Clear";
-  searchForm.appendChild(searchInput);
-  searchForm.appendChild(searchButton);
-  section.appendChild(searchForm);
-  const authorsWrapper = document.createElement("section");
-  authorsWrapper.id = "contents";
-  authorsWrapper.classList.add("grid");
-  authorsWrapper.classList.add("column");
-  section.appendChild(authorsWrapper);
-  
 
-  
-
-
+  const section = generateSearchForm(allAuthors);
+  const authorsWrapper = section.querySelector("#contents");
 
   //fill with content
   const call = await fetchGraphQL(
@@ -325,19 +307,101 @@ async function iniExplore() {
       allAuthors.push(author);
     });
 
-  // add listener
-
-  searchInput.addEventListener("input", (e) => {
-      search(allAuthors, e.target.value);
-    });
-
 
     document.querySelector("main").appendChild(section);
 }
 
 
+async function iniEntries() {
+  //fill with content
+  const allEntries = [];
+
+  const section = generateSearchForm(allEntries);
+  const entriesWrapper = section.querySelector("#contents");
+
+
+
+  const call = await fetchGraphQL(
+    "{\n  items {\n    id\n    name\n    thumbnail\n    origin {\n      authors {\n        name\n        id\n      }\n    }\n  }\n}\n",
+  );
+
+
+  call?.items
+    ?.sort((a, b) => 0.5 - Math.random())
+    .forEach((entry, i) => {
+      const entryContainer = document.createElement("article");
+      const entryLink = document.createElement("a");
+      const entryImgContainer = document.createElement("figure");
+      const entryInfoContainer = document.createElement("p");
+
+      if (entry?.id?.includes("@donotuse")) return;
+      if (!entry?.name) return;
+
+      if (entry.thumbnail) {
+        let url = new URL(entry.thumbnail);
+        let params = new URLSearchParams(url.search);
+        params.set("width", "200");
+        params.set("height", "200");
+        url.search = params.toString();
+        const entryImg = document.createElement("img");
+        entryImg.setAttribute("data-src", url.toString());
+        entryImg.classList.add("lazy");
+        entryImgContainer.appendChild(entryImg);
+      }
+      //<img alt="A lazy image" class="lazy" data-src="lazy.jpg" />
+      entryLink.href = baseUrl + "/entry.html?id=" + entry.id;
+
+      entryInfoContainer.innerHTML = entry.name;
+
+      entryLink.appendChild(entryImgContainer);
+      entryLink.appendChild(entryInfoContainer);
+
+      entryContainer.appendChild(entryLink);
+
+      entriesWrapper.appendChild(entryContainer);
+      entry.html = entryContainer;
+
+      allEntries.push(entry);
+    });
+  document.querySelector("main").appendChild(section);
+
+
+  let lazyLoadInstance = new LazyLoad({});
+  lazyLoadInstance.update();
+
+}
+
+
 
 // HELPER FUNCTIONS
+
+function generateSearchForm(dataSet) { 
+  const section = document.createElement("section");
+  const searchForm = document.createElement("form");
+  searchForm.id = "search";
+  const searchInput = document.createElement("input");
+  searchInput.type = "search";
+  searchInput.name = "search";
+  searchInput.placeholder = "Search …";
+  const searchButton = document.createElement("button");
+  searchButton.type = "reset";
+  searchButton.innerHTML = "Clear";
+  searchForm.appendChild(searchInput);
+  searchForm.appendChild(searchButton);
+  section.appendChild(searchForm);
+  const contents = document.createElement("section");
+  contents.id = "contents";
+  contents.classList.add("grid");
+  contents.classList.add("column");
+  section.appendChild(contents);
+  
+  searchInput.addEventListener("input", (e) => {
+    search(dataSet, e.target.value);
+  });
+
+  return section;
+
+}
 
 function search(data, content) {
   if (content === "") {
