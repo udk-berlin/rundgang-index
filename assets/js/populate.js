@@ -115,6 +115,114 @@ async function iniExplore() {
   main.appendChild(sectionWrapper);
 }
 
+function generateHTMLStructure(data, path) {
+
+  const sectionWrapper = document.createElement("section");
+
+  const headerContainer = document.createElement("section");
+  sectionWrapper.appendChild(headerContainer);
+  headerContainer.id = "header";
+  headerContainer.classList.add("grid");
+  headerContainer.classList.add("column");
+
+  const headerArticle = document.createElement("article");
+  headerContainer.appendChild(headerArticle);
+
+  const titleLink = document.createElement("a");
+  titleLink.href = baseUrl + "/author.html?id=" + data.id;
+  if(data?.thumbnail) {
+  
+    const imgFigure = document.createElement("figure");
+    const img = document.createElement("img");
+    img.src = data.thumbnail;
+    imgFigure.appendChild(img);
+    titleLink.appendChild(imgFigure);
+  }
+  const title = document.createElement("p");
+  title.innerHTML = data.name;
+  titleLink.appendChild(title);
+
+  headerArticle.appendChild(titleLink);
+
+  if(data.authors || data.parents || data.created) {
+    //metadata
+
+    const headerAside = document.createElement("aside"); 
+    headerContainer.appendChild(headerAside);
+  }
+
+
+    
+  const descriptionContainer = document.createElement("section");
+
+  if (descriptionContainer.innerHTML.length > 0) {
+    sectionWrapper.appendChild(descriptionContainer);
+  }
+  
+
+  // contexts
+
+  const contextsContainer = document.createElement("section");
+
+
+  if (data?.context?.length > 0) {
+    sectionWrapper.appendChild(contextsContainer);
+  }
+  
+
+
+  
+
+  // items
+
+  const itemsContainer = document.createElement("section");
+  itemsContainer.id = "items";
+  itemsContainer.classList.add("grid");
+  itemsContainer.classList.add("column");
+
+  data?.item?.forEach((item) => {
+    const entryContainer = document.createElement("article");
+    const entryLink = document.createElement("a");
+    const entryImgContainer = document.createElement("figure");
+    const entryInfoContainer = document.createElement("p");
+
+    if (item?.id?.includes("@donotuse")) return;
+    if (!item?.name) return;
+
+    if (item?.thumbnail) {
+      const entryImg = document.createElement("img");
+      entryImg.src = item?.thumbnail;
+      entryImgContainer.appendChild(entryImg);
+    }
+    entryLink.appendChild(entryImgContainer);
+    entryLink.href = baseUrl + "/entry.html?id=" + item.id;
+
+    entryInfoContainer.innerHTML = item.name;
+
+    entryLink.appendChild(entryInfoContainer);
+
+    entryContainer.appendChild(entryLink);
+
+    itemsContainer.appendChild(entryContainer);
+  });
+
+  if (data?.item?.length > 0) {
+    sectionWrapper.appendChild(itemsContainer);
+  }
+
+  //contents
+  const contentContainer = document.createElement("section");
+
+  if (contentContainer.innerHTML.length > 0) {
+    sectionWrapper.appendChild(contentContainer);
+  }
+
+
+
+  return sectionWrapper;
+
+}
+
 
 async function iniAuthor() {
 
@@ -141,44 +249,36 @@ async function iniAuthor() {
 
   if (!userData) return;
 
-  const headerContainer = document.getElementById("authorHeader");
-  // const entriesContainer = document.getElementById("authorEntries");
+  const generatedStructure = generateHTMLStructure(userData);
 
-  headerContainer.querySelector("#authorHeader h2").innerHTML = userData?.name;
-  // headerContainer.querySelector("#authorHeader img").src = userData?.thumbnail;
+  // userData?.item?.forEach((entry) => {
+  //   const entryContainer = document.createElement("article");
+  //   const entryLink = document.createElement("a");
+  //   const entryImgContainer = document.createElement("figure");
+  //   const entryInfoContainer = document.createElement("p");
 
-  if (userData.thumbnail) {
-    const authorImg = document.createElement("img");
-    authorImg.src = userData.thumbnail;
-    headerContainer.querySelector("figure").appendChild(authorImg);
-  }
+  //   if (entry?.id?.includes("@donotuse")) return;
+  //   if (!entry?.name) return;
 
-  userData?.item?.forEach((entry) => {
-    const entryContainer = document.createElement("article");
-    const entryLink = document.createElement("a");
-    const entryImgContainer = document.createElement("figure");
-    const entryInfoContainer = document.createElement("p");
+  //   if (entry.thumbnail) {
+  //     const entryImg = document.createElement("img");
+  //     entryImg.src = entry.thumbnail;
+  //     entryImgContainer.appendChild(entryImg);
+  //   }
 
-    if (entry?.id?.includes("@donotuse")) return;
-    if (!entry?.name) return;
+  //   entryLink.href = baseUrl + "/entry.html?id=" + entry.id;
 
-    if (entry.thumbnail) {
-      const entryImg = document.createElement("img");
-      entryImg.src = entry.thumbnail;
-      entryImgContainer.appendChild(entryImg);
-    }
+  //   entryInfoContainer.innerHTML = entry.name;
 
-    entryLink.href = baseUrl + "/entry.html?id=" + entry.id;
+  //   entryLink.appendChild(entryImgContainer);
+  //   entryLink.appendChild(entryInfoContainer);
 
-    entryInfoContainer.innerHTML = entry.name;
+  //   entryContainer.appendChild(entryLink);
 
-    entryLink.appendChild(entryImgContainer);
-    entryLink.appendChild(entryInfoContainer);
+  //   document.getElementById("authorEntries").appendChild(entryContainer);
+  // });
 
-    entryContainer.appendChild(entryLink);
-
-    document.getElementById("authorEntries").appendChild(entryContainer);
-  });
+  document.querySelector("main").appendChild(generatedStructure);
 }
 
 
