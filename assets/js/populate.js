@@ -65,6 +65,8 @@ export async function ini(type) {
       return iniExplore();
     case "author":
       return iniAuthor();
+    case "authors":
+      return iniAuthors();
   }
 }
 
@@ -231,16 +233,10 @@ async function iniExplore() {
   data = d;
   data.path = await getPath(id);
 
-
-
-
-
   if (!id) return;
 
-
-
   const generatedStructure = generateHTMLStructure(data,false);
-  document.querySelector("main").appendChild(generatedStructure);
+
 
   console.log(generatedStructure)
   if(generatedStructure.querySelector('#contexts')) {
@@ -257,12 +253,106 @@ async function iniExplore() {
     return;
   }
 
-
-  return
+  document.querySelector("main").appendChild(generatedStructure);
 }
 
 
+
+ async function iniAuthors() {
+
+  const allAuthors = [];
+
+
+  const section = document.createElement("section");
+  const searchForm = document.createElement("form");
+  searchForm.id = "search";
+  const searchInput = document.createElement("input");
+  searchInput.type = "search";
+  searchInput.name = "search";
+  searchInput.placeholder = "Search …";
+  const searchButton = document.createElement("button");
+  searchButton.type = "reset";
+  searchButton.innerHTML = "Clear";
+  searchForm.appendChild(searchInput);
+  searchForm.appendChild(searchButton);
+  section.appendChild(searchForm);
+  const authorsWrapper = document.createElement("section");
+  authorsWrapper.id = "contents";
+  authorsWrapper.classList.add("grid");
+  authorsWrapper.classList.add("column");
+  section.appendChild(authorsWrapper);
+  
+
+  
+
+
+
+  //fill with content
+  const call = await fetchGraphQL(
+    "{\n  users {\n    id\n    name\n    thumbnail\n    item {\n      id\n    }\n  }\n}\n",
+  );
+
+  call?.users
+    ?.sort((a, b) => 0.5 - Math.random())
+    .forEach((author, i) => {
+      const authorContainer = document.createElement("article");
+      const authorLink = document.createElement("a");
+      const authorImgContainer = document.createElement("figure");
+      const authorInfoContainer = document.createElement("p");
+
+      if (author?.id?.includes("@donotuse")) return;
+      if (!author?.item || author?.item?.length <= 0) return;
+      if (!author?.name) return;
+
+      if (author.thumbnail) {
+        const authorImg = document.createElement("img");
+        authorImg.src = author.thumbnail;
+        authorImgContainer.appendChild(authorImg);
+      }
+
+      authorLink.href = baseUrl + "/author.html?id=" + author.id;
+
+      authorInfoContainer.innerHTML = author.name;
+
+      authorLink.appendChild(authorImgContainer);
+      authorLink.appendChild(authorInfoContainer);
+
+      authorContainer.appendChild(authorLink);
+
+      authorsWrapper.appendChild(authorContainer);
+      author.html = authorContainer;
+
+      allAuthors.push(author);
+    });
+
+  // add listener
+
+  searchInput.addEventListener("input", (e) => {
+      search(allAuthors, e.target.value);
+    });
+
+
+    document.querySelector("main").appendChild(section);
+}
+
+
+
 // HELPER FUNCTIONS
+
+function search(data, content) {
+  if (content === "") {
+    data.forEach((entry) => {
+      entry.html.style.display = "block";
+    });
+  }
+  data.forEach((entry) => {
+    if (entry.name.toLowerCase().includes(content.toLowerCase())) {
+      entry.html.style.display = "block";
+    } else {
+      entry.html.style.display = "none";
+    }
+  });
+}
 
 function populateContextsExplore(contextContainer, data) {
   if(!data.context) return 
