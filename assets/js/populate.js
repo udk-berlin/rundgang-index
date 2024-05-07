@@ -4,16 +4,10 @@ let config;
 let apiUrl;
 let baseUrl;
 let apiVersion;
-let selectedLanguage = "DE";
+let selectedLanguage = "EN";
 let id;
 
 let excludedAccounts = [];
-
-async function getLevel(id) {
-  const response = await fetch(apiUrl + apiVersion + id);
-  const data = await response.json();
-  return data;
-}
 
 export async function ini(type) {
   const response = await fetch("./config.json");
@@ -25,6 +19,8 @@ export async function ini(type) {
 
   const params = new URLSearchParams(window.location.search);
   id = params.get("id");
+
+  languageSelector()
 
   switch (type) {
     case "explore":
@@ -38,6 +34,21 @@ export async function ini(type) {
     case "entry":
       return iniEntry();
   }
+}
+
+function languageSelector() {
+  if (!localStorage.getItem("lang")) {
+    localStorage.setItem("lang", selectedLanguage);
+  } else {
+    selectedLanguage = localStorage.getItem("lang");
+    document.querySelector("header select").value = selectedLanguage;
+  }
+
+  document.querySelector("header select").addEventListener("change", (e) => {
+    selectedLanguage = e.target.value;
+    localStorage.setItem("lang", selectedLanguage);
+    location.reload();
+  })
 }
 
 function generateHTMLStructure(data, header = true) {
@@ -168,19 +179,19 @@ function generateHTMLStructure(data, header = true) {
   contentContainer.id = "content";
 
   // contents
-  if (data.type === "item" && data.contentData) {
+  if (data.type === "item" && data.contentData && data.contentData?.languages) {
     if (
       data.contentData?.languages[selectedLanguage]?.content &&
       Object.keys(data.contentData?.languages[selectedLanguage]?.content)
         .length > 0
     ) {
       Object.keys(
-        data.contentData?.languages[selectedLanguage]?.content,
+        data.contentData?.languages[selectedLanguage]?.content
       ).forEach((key) => {
         contentContainer.insertAdjacentHTML(
           "beforeend",
           data.contentData?.languages[selectedLanguage]?.content[key]
-            ?.formatted_content,
+            ?.formatted_content
         );
       });
     }
@@ -231,7 +242,7 @@ async function iniAuthor() {
   const call = await fetchGraphQL(
     '{  user(id: "' +
       id +
-      '") {    name    id    thumbnail    item {      name      thumbnail      id    }  }}',
+      '") {    name    id    thumbnail    item {      name      thumbnail      id    }  }}'
   );
 
   const userData = call?.user;
@@ -264,7 +275,7 @@ async function iniExplore() {
     generatedStructure.querySelector("#contexts").innerHTML = "";
     populateContextsExplore(
       generatedStructure.querySelector("#contexts"),
-      data,
+      data
     );
   }
 
@@ -287,7 +298,7 @@ async function iniAuthors() {
 
   //fill with content
   const call = await fetchGraphQL(
-    "{\n  users {\n    id\n    name\n    thumbnail\n    item {\n      id\n    }\n  }\n}\n",
+    "{\n  users {\n    id\n    name\n    thumbnail\n    item {\n      id\n    }\n  }\n}\n"
   );
 
   call?.users
@@ -334,7 +345,7 @@ async function iniEntries() {
   const entriesWrapper = section.querySelector("#contents");
 
   const call = await fetchGraphQL(
-    "{\n  items {\n    id\n    name\n    thumbnail\n    origin {\n      authors {\n        name\n        id\n      }\n    }\n  }\n}\n",
+    "{\n  items {\n    id\n    name\n    thumbnail\n    origin {\n      authors {\n        name\n        id\n      }\n    }\n  }\n}\n"
   );
 
   call?.items
@@ -427,7 +438,7 @@ function populateContextsExplore(contextContainer, data) {
   if (!data.context) return;
   const ul = document.createElement("ul");
   let sortedContext = [...data.context].sort((a, b) =>
-    a.name.localeCompare(b.name),
+    a.name.localeCompare(b.name)
   );
   sortedContext.forEach((context) => {
     const li = document.createElement("li");
