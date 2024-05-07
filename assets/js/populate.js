@@ -33,6 +33,8 @@ export async function ini(type) {
       return iniEntries();
     case "entry":
       return iniEntry();
+    case "index":
+      return
   }
 }
 
