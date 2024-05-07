@@ -100,17 +100,21 @@ function generateHTMLStructure(data, header = true) {
 
 
     
-  const descriptionContainer = document.createElement("section");
+
 
 
   if (data.hasOwnProperty('description')) {
     const descriptionContainer = document.createElement("section");
+    descriptionContainer.id = "description";
+    const descriptionP = document.createElement("p");
   
     if (data.description.hasOwnProperty(selectedLanguage)) {
-      descriptionContainer.innerHTML = data.description[selectedLanguage];
+      
+      descriptionP.innerHTML = data.description[selectedLanguage];
+      descriptionContainer.appendChild(descriptionP);
     }
   
-    if (descriptionContainer.innerHTML.length > 0) {
+    if (descriptionP.innerHTML.length > 0) {
       sectionWrapper.appendChild(descriptionContainer);
     }
   }
@@ -189,6 +193,7 @@ function generateHTMLStructure(data, header = true) {
 
   //contents
   const contentContainer = document.createElement("section");
+  contentContainer.id = "content";
 
    // contents
    if (data.type === "item" && data.contentData) {
@@ -217,7 +222,7 @@ function generateHTMLStructure(data, header = true) {
 
 
  // exception for pages like author.html
- if(headerContainer && (sectionWrapper.querySelectorAll('section').length  === 2)) {
+ if(headerContainer && (sectionWrapper.querySelectorAll('section').length  === 2) && data.type !== 'item') {
   const hr = document.createElement('hr');
   headerContainer.appendChild(hr)
  }
