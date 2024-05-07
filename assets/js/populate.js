@@ -499,7 +499,7 @@ function populateContextsExplore(contextContainer, data) {
 function populatePath(data,pathContainer) {
 
   pathContainer.innerHTML = "";
-  pathContainer.id = 'explorePath'
+  pathContainer.id = 'path'
 
   const ul = document.createElement("ul");
 
