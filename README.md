@@ -2,7 +2,9 @@
 
 ### medienhaus/
 
-The archived contents of Berlin University of the Arts’ Rundgang 2021–2023 websites.
+Customizable modular free and open-source environment for decentralized, distributed communication and collaboration.
+
+[Website](https://medienhaus.dev/) — [Fediverse](https://chaos.social/@medienhaus)
 
 <br>
 
