@@ -4,6 +4,7 @@ main section > section#contents > * + * {
 }
 
 main #content > * + *,
+main #description > * + *,
 main #header > aside > * + * {
   margin-top: calc(var(--margin) * 0.7);
 }
