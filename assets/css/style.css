@@ -256,7 +256,7 @@ nav ul {
   list-style-type: "\002f\feff";
 }
 
-.grid.column {
+.grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(24ch, 1fr));
   grid-gap: calc(var(--margin) * 1.4);

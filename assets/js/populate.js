@@ -62,7 +62,6 @@ function generateHTMLStructure(data, header = true) {
     sectionWrapper.appendChild(headerContainer);
     headerContainer.id = "header";
     headerContainer.classList.add("grid");
-    headerContainer.classList.add("column");
   
     const headerArticle = document.createElement("article");
     headerContainer.appendChild(headerArticle);
@@ -159,7 +158,6 @@ function generateHTMLStructure(data, header = true) {
   const itemsContainer = document.createElement("section");
   itemsContainer.id = "items";
   itemsContainer.classList.add("grid");
-  itemsContainer.classList.add("column");
 
   data?.item?.forEach((item) => {
     const entryContainer = document.createElement("article");
@@ -449,7 +447,6 @@ function generateSearchForm(dataSet) {
   const contents = document.createElement("section");
   contents.id = "contents";
   contents.classList.add("grid");
-  contents.classList.add("column");
   section.appendChild(contents);
   
   searchInput.addEventListener("input", (e) => {
