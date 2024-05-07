@@ -21,8 +21,8 @@
     <header>
       <h1><a href="/">rundgang/index</a></h1>
       <select>
-        <option>EN</option>
-        <option>DE</option>
+        <option value="en">EN</option>
+        <option value="de">DE</option>
       </select>
     </header>
     <main>
@@ -35,7 +35,7 @@
       </nav>
       <section>
         <h2>Archived Rundgang web experiences</h2>
-        <div class="grid column">
+        <div class="grid">
           <article>
             <a href="https://2021.rundgang.udk-berlin.de" rel="nofollow noopener noreferrer" target="_blank">
               <figure>
@@ -63,5 +63,9 @@
         </div>
       </section>
     </main>
+    <script type="module">
+      import * as main from './assets/js/populate.js';
+      main.ini('index');
+    </script>
   </body>
 </html>

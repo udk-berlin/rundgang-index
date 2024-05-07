@@ -1,4 +1,8 @@
-main article#authorHeader + hr {
+main #header > hr {
   align-self: end;
   margin: 0;
+}
+
+main #header + #items {
+  margin-top: calc(var(--margin) * 1.4);
 }

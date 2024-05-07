@@ -19,11 +19,11 @@
   </head>
   <body>
     <header>
-          <h1><a href="/">rundgang/index</a></h1>
+      <h1><a href="/">rundgang/index</a></h1>
       <section>
         <select>
-          <option>EN</option>
-          <option>DE</option>
+          <option value="en">EN</option>
+          <option value="de">DE</option>
         </select>
       </section>
     </header>
@@ -35,14 +35,10 @@
           <li><a class="active" href="/explore.html">explore</a></li>
         </ul>
       </nav>
-      <section>
-        <section id="explorePath"></section>
-        <section id="exploreContent"></section>
-      </section>
     </main>
     <script type="module">
-      import * as main from './assets/js/explore.js';
-      main.iniExplore();
+      import * as main from './assets/js/populate.js';
+      main.ini('explore');
     </script>
   </body>
 </html>

@@ -1,49 +1,32 @@
-main #exploreContent > *:not(:empty) + * {
-  margin-top: calc(var(--margin) * 1.4);
-}
-
-/*
-main #exploreContexts:empty {
-  display: none;
-}
-*/
-
-main #exploreContexts {
+main #contexts {
   max-height: 100%;
 }
 
-main #explorePath:not(:empty) {
+main #contexts:not(:empty) + #items {
+  margin-top: calc(var(--margin) * 1.4);
+}
+
+main #path:not(:empty) {
   background-color: var(--color-background);
   padding-bottom: calc(var(--margin) * 1.4);
   position: sticky;
   top: 4.2rem;
 }
 
-/*
-main #explorePath + * {
-  margin-top: calc(var(--margin) * 1.4);
-}
-*/
-
-main #explorePath > ul {
+main #path > ul {
   max-height: 100%;
 }
 
-main #explorePath ul li {
+main #path ul li {
   display: inline;
 }
 
-main #explorePath ul li:not(:first-child)::before {
+main #path ul li:not(:first-child)::before {
   content: " → ";
 }
 
 @media (max-width: 768px) {
-  main #exploreContent {
-    grid-auto-flow: row;
-    grid-gap: calc(var(--margin) * 1.4);
-    grid-template-columns: unset;
-  }
-  main #explorePath:not(:empty) {
+  main #path:not(:empty) {
     background-color: var(--color-background);
     margin-top: -1.4rem;
     padding-top: calc(var(--margin) * 1.4);

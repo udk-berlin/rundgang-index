@@ -22,8 +22,8 @@
       <h1><a href="/">rundgang/index</a></h1>
       <section>
         <select>
-          <option>EN</option>
-          <option>DE</option>
+          <option value="en">EN</option>
+          <option value="de">DE</option>
         </select>
       </section>
     </header>
@@ -36,7 +36,9 @@
         </ul>
       </nav>
     </main>
-    <script src="./assets/js/entry.js"></script>
-    <script>iniEntryPage()</script>
+    <script type="module">
+      import * as main from './assets/js/populate.js';
+      main.ini('entry');
+    </script>
   </body>
 </html>
