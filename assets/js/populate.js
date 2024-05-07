@@ -7,6 +7,7 @@ let apiVersion;
 let selectedLanguage = "en";
 let id;
 
+let locales 
 let excludedAccounts = [];
 
 export async function ini(type) {
@@ -20,7 +21,7 @@ export async function ini(type) {
   const params = new URLSearchParams(window.location.search);
   id = params.get("id");
 
-  languageSelector()
+  await languageSelector()
 
   switch (type) {
     case "explore":
@@ -34,11 +35,11 @@ export async function ini(type) {
     case "entry":
       return iniEntry();
     case "index":
-      return
+      return iniIndex()
   }
 }
 
-function languageSelector() {
+async function languageSelector() {
   if (!localStorage.getItem("lang")) {
     localStorage.setItem("lang", selectedLanguage);
   } else {
@@ -51,6 +52,9 @@ function languageSelector() {
     localStorage.setItem("lang", selectedLanguage);
     location.reload();
   })
+
+  if(selectedLanguage === "en") return
+  locales = await fetch("./assets/locales/"+selectedLanguage+".json").then((response) => response.json());
 }
 
 function generateHTMLStructure(data, header = true) {
@@ -104,8 +108,8 @@ function generateHTMLStructure(data, header = true) {
     descriptionContainer.id = "description";
     const descriptionP = document.createElement("p");
 
-    if (data.description.hasOwnProperty(selectedLanguage)) {
-      descriptionP.innerHTML = data.description[selectedLanguage];
+    if (data.description.hasOwnProperty(selectedLanguage.toUpperCase())) {
+      descriptionP.innerHTML = data.description[selectedLanguage.toUpperCase()];
       descriptionContainer.appendChild(descriptionP);
     }
 
@@ -120,7 +124,7 @@ function generateHTMLStructure(data, header = true) {
   contextsContainer.id = "contexts";
 
   const entryUlContainer = document.createElement("ul");
-  entryUlContainer.innerHTML = "<h3>Sub-Contexts: </h3>";
+  entryUlContainer.innerHTML = "<h3>"+(locales ? locales["Sub-Contexts"] : "Sub-Contexts")+": </h3>";
   data?.context?.forEach((context) => {
     const entryContainer = document.createElement("li");
     const entryLink = document.createElement("a");
@@ -183,16 +187,16 @@ function generateHTMLStructure(data, header = true) {
   // contents
   if (data.type === "item" && data.contentData && data.contentData?.languages) {
     if (
-      data.contentData?.languages[selectedLanguage]?.content &&
-      Object.keys(data.contentData?.languages[selectedLanguage]?.content)
+      data.contentData?.languages[selectedLanguage.toUpperCase()]?.content &&
+      Object.keys(data.contentData?.languages[selectedLanguage.toUpperCase()]?.content)
         .length > 0
     ) {
       Object.keys(
-        data.contentData?.languages[selectedLanguage]?.content
+        data.contentData?.languages[selectedLanguage.toUpperCase()]?.content
       ).forEach((key) => {
         contentContainer.insertAdjacentHTML(
           "beforeend",
-          data.contentData?.languages[selectedLanguage]?.content[key]
+          data.contentData?.languages[selectedLanguage.toUpperCase()]?.content[key]
             ?.formatted_content
         );
       });
@@ -217,6 +221,10 @@ function generateHTMLStructure(data, header = true) {
 }
 
 // ini functions
+
+function iniIndex() {
+  document.querySelector("h2").innerHTML = (locales ? locales["Archived Rundgang web experiences"] : "Archived Rundgang web experiences")
+}
 
 async function iniEntry() {
   const params = new URLSearchParams(window.location.search);
@@ -402,10 +410,10 @@ function generateSearchForm(dataSet) {
   const searchInput = document.createElement("input");
   searchInput.type = "search";
   searchInput.name = "search";
-  searchInput.placeholder = "Search …";
+  searchInput.placeholder = (locales ? locales["Search …"] : "Search …");
   const searchButton = document.createElement("button");
   searchButton.type = "reset";
-  searchButton.innerHTML = "Clear";
+  searchButton.innerHTML = (locales ? locales["Clear"] : "Clear");
   searchForm.appendChild(searchInput);
   searchForm.appendChild(searchButton);
   section.appendChild(searchForm);
@@ -490,7 +498,7 @@ function generateMetaData(entryData) {
 
   // parents
   const parentsContainer = document.createElement("div");
-  parentsContainer.innerHTML = "<h3>Published in: </h3>";
+  parentsContainer.innerHTML = "<h3>"+(locales ? locales["Published in"] : "Published in")+": </h3>";
   const parentsList = document.createElement("ul");
   parentsContainer.appendChild(parentsList);
   entryData?.parents.forEach(async (parent) => {
@@ -509,9 +517,9 @@ function generateMetaData(entryData) {
   const authorsContainer = document.createElement("div");
 
   if (entryData.type === "item") {
-    authorsContainer.innerHTML = "<h3>Authors: </h3>";
+    authorsContainer.innerHTML = "<h3>"+(locales ? locales["Authors"] : "Authors")+": </h3>";
   } else {
-    authorsContainer.innerHTML = "<h3>Moderators: </h3>";
+    authorsContainer.innerHTML = "<h3>"+(locales ? locales["Moderators"] : "Moderators")+": </h3>";
   }
 
   const authorsList = document.createElement("ul");
@@ -537,7 +545,7 @@ function generateMetaData(entryData) {
 
   // created
   const created = document.createElement("div");
-  created.innerHTML = "<h3>Created on: </h3>" + "<time>01/01/1970</time>";
+  created.innerHTML = "<h3>"+(locales ? locales["Created on"] : "Created on")+": </h3>" + "<time>01/01/1970</time>";
   headerInfoContainer.appendChild(created);
 
   return headerInfoContainer;
