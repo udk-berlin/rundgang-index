@@ -106,6 +106,9 @@ function generateHTMLStructure(data, header = true) {
   if (data.hasOwnProperty("description")) {
     const descriptionContainer = document.createElement("section");
     descriptionContainer.id = "description";
+    const descriptionH3 = document.createElement("h3");
+    descriptionH3.innerHTML = (locales ? locales["Description"] : "Description");
+    descriptionContainer.appendChild(descriptionH3);
     const descriptionP = document.createElement("p");
 
     if (data.description.hasOwnProperty(selectedLanguage.toUpperCase())) {
@@ -191,6 +194,9 @@ function generateHTMLStructure(data, header = true) {
       Object.keys(data.contentData?.languages[selectedLanguage.toUpperCase()]?.content)
         .length > 0
     ) {
+      const contentH3 = document.createElement("h3");
+      contentH3.innerHTML = (locales ? locales["Content"] : "Content");
+      contentContainer.appendChild(contentH3);
       Object.keys(
         data.contentData?.languages[selectedLanguage.toUpperCase()]?.content
       ).forEach((key) => {
