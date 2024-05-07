@@ -7,7 +7,7 @@ let apiVersion;
 let selectedLanguage = "en";
 let id;
 
-let locales 
+let locales;
 let excludedAccounts = [];
 
 export async function ini(type) {
@@ -21,7 +21,7 @@ export async function ini(type) {
   const params = new URLSearchParams(window.location.search);
   id = params.get("id");
 
-  await languageSelector()
+  await languageSelector();
 
   switch (type) {
     case "explore":
@@ -35,7 +35,7 @@ export async function ini(type) {
     case "entry":
       return iniEntry();
     case "index":
-      return iniIndex()
+      return iniIndex();
   }
 }
 
@@ -51,10 +51,12 @@ async function languageSelector() {
     selectedLanguage = e.target.value;
     localStorage.setItem("lang", selectedLanguage);
     location.reload();
-  })
+  });
 
-  if(selectedLanguage === "en") return
-  locales = await fetch("./assets/locales/"+selectedLanguage+".json").then((response) => response.json());
+  if (selectedLanguage === "en") return;
+  locales = await fetch("./assets/locales/" + selectedLanguage + ".json").then(
+    (response) => response.json(),
+  );
 }
 
 function generateHTMLStructure(data, header = true) {
@@ -107,7 +109,7 @@ function generateHTMLStructure(data, header = true) {
     const descriptionContainer = document.createElement("section");
     descriptionContainer.id = "description";
     const descriptionH3 = document.createElement("h3");
-    descriptionH3.innerHTML = (locales ? locales["Description"] : "Description");
+    descriptionH3.innerHTML = locales ? locales["Description"] : "Description";
     descriptionContainer.appendChild(descriptionH3);
     const descriptionP = document.createElement("p");
 
@@ -127,7 +129,8 @@ function generateHTMLStructure(data, header = true) {
   contextsContainer.id = "contexts";
 
   const entryUlContainer = document.createElement("ul");
-  entryUlContainer.innerHTML = "<h3>"+(locales ? locales["Sub-Contexts"] : "Sub-Contexts")+": </h3>";
+  entryUlContainer.innerHTML =
+    "<h3>" + (locales ? locales["Sub-Contexts"] : "Sub-Contexts") + ": </h3>";
   data?.context?.forEach((context) => {
     const entryContainer = document.createElement("li");
     const entryLink = document.createElement("a");
@@ -191,19 +194,21 @@ function generateHTMLStructure(data, header = true) {
   if (data.type === "item" && data.contentData && data.contentData?.languages) {
     if (
       data.contentData?.languages[selectedLanguage.toUpperCase()]?.content &&
-      Object.keys(data.contentData?.languages[selectedLanguage.toUpperCase()]?.content)
-        .length > 0
+      Object.keys(
+        data.contentData?.languages[selectedLanguage.toUpperCase()]?.content,
+      ).length > 0
     ) {
       const contentH3 = document.createElement("h3");
-      contentH3.innerHTML = (locales ? locales["Content"] : "Content");
+      contentH3.innerHTML = locales ? locales["Content"] : "Content";
       contentContainer.appendChild(contentH3);
       Object.keys(
-        data.contentData?.languages[selectedLanguage.toUpperCase()]?.content
+        data.contentData?.languages[selectedLanguage.toUpperCase()]?.content,
       ).forEach((key) => {
         contentContainer.insertAdjacentHTML(
           "beforeend",
-          data.contentData?.languages[selectedLanguage.toUpperCase()]?.content[key]
-            ?.formatted_content
+          data.contentData?.languages[selectedLanguage.toUpperCase()]?.content[
+            key
+          ]?.formatted_content,
         );
       });
     }
@@ -229,7 +234,9 @@ function generateHTMLStructure(data, header = true) {
 // ini functions
 
 function iniIndex() {
-  document.querySelector("h2").innerHTML = (locales ? locales["Archived Rundgang web experiences"] : "Archived Rundgang web experiences")
+  document.querySelector("h2").innerHTML = locales
+    ? locales["Archived Rundgang web experiences"]
+    : "Archived Rundgang web experiences";
 }
 
 async function iniEntry() {
@@ -256,9 +263,7 @@ async function iniAuthor() {
   if (!id) return;
 
   const call = await fetchGraphQL(
-    '{  user(id: "' +
-      id +
-      '") {    name    id    thumbnail    item {      name      thumbnail      id    }  }}'
+    '{ user(id: "' + id + '") { name id thumbnail item { name thumbnail id } } }',
   );
 
   const userData = call?.user;
@@ -291,7 +296,7 @@ async function iniExplore() {
     generatedStructure.querySelector("#contexts").innerHTML = "";
     populateContextsExplore(
       generatedStructure.querySelector("#contexts"),
-      data
+      data,
     );
   }
 
@@ -314,7 +319,7 @@ async function iniAuthors() {
 
   //fill with content
   const call = await fetchGraphQL(
-    "{\n  users {\n    id\n    name\n    thumbnail\n    item {\n      id\n    }\n  }\n}\n"
+    "{ users { id name thumbnail item { id } } }",
   );
 
   call?.users
@@ -361,7 +366,7 @@ async function iniEntries() {
   const entriesWrapper = section.querySelector("#contents");
 
   const call = await fetchGraphQL(
-    "{\n  items {\n    id\n    name\n    thumbnail\n    origin {\n      authors {\n        name\n        id\n      }\n    }\n  }\n}\n"
+    "{ items { id name thumbnail origin { authors { name id } } } }",
   );
 
   call?.items
@@ -416,10 +421,10 @@ function generateSearchForm(dataSet) {
   const searchInput = document.createElement("input");
   searchInput.type = "search";
   searchInput.name = "search";
-  searchInput.placeholder = (locales ? locales["Search …"] : "Search …");
+  searchInput.placeholder = locales ? locales["Search …"] : "Search …";
   const searchButton = document.createElement("button");
   searchButton.type = "reset";
-  searchButton.innerHTML = (locales ? locales["Clear"] : "Clear");
+  searchButton.innerHTML = locales ? locales["Clear"] : "Clear";
   searchForm.appendChild(searchInput);
   searchForm.appendChild(searchButton);
   section.appendChild(searchForm);
@@ -454,7 +459,7 @@ function populateContextsExplore(contextContainer, data) {
   if (!data.context) return;
   const ul = document.createElement("ul");
   let sortedContext = [...data.context].sort((a, b) =>
-    a.name.localeCompare(b.name)
+    a.name.localeCompare(b.name),
   );
   sortedContext.forEach((context) => {
     const li = document.createElement("li");
@@ -504,7 +509,8 @@ function generateMetaData(entryData) {
 
   // parents
   const parentsContainer = document.createElement("div");
-  parentsContainer.innerHTML = "<h3>"+(locales ? locales["Published in"] : "Published in")+": </h3>";
+  parentsContainer.innerHTML =
+    "<h3>" + (locales ? locales["Published in"] : "Published in") + ": </h3>";
   const parentsList = document.createElement("ul");
   parentsContainer.appendChild(parentsList);
   entryData?.parents.forEach(async (parent) => {
@@ -523,9 +529,11 @@ function generateMetaData(entryData) {
   const authorsContainer = document.createElement("div");
 
   if (entryData.type === "item") {
-    authorsContainer.innerHTML = "<h3>"+(locales ? locales["Authors"] : "Authors")+": </h3>";
+    authorsContainer.innerHTML =
+      "<h3>" + (locales ? locales["Authors"] : "Authors") + ": </h3>";
   } else {
-    authorsContainer.innerHTML = "<h3>"+(locales ? locales["Moderators"] : "Moderators")+": </h3>";
+    authorsContainer.innerHTML =
+      "<h3>" + (locales ? locales["Moderators"] : "Moderators") + ": </h3>";
   }
 
   const authorsList = document.createElement("ul");
@@ -551,7 +559,11 @@ function generateMetaData(entryData) {
 
   // created
   const created = document.createElement("div");
-  created.innerHTML = "<h3>"+(locales ? locales["Created on"] : "Created on")+": </h3>" + "<time>01/01/1970</time>";
+  created.innerHTML =
+    "<h3>" +
+    (locales ? locales["Created on"] : "Created on") +
+    ": </h3>" +
+    "<time>01/01/1970</time>";
   headerInfoContainer.appendChild(created);
 
   return headerInfoContainer;
