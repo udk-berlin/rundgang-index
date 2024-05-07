@@ -49,6 +49,7 @@ export async function ini(type) {
 function generateHTMLStructure(data, header = true) {
 
   const sectionWrapper = document.createElement("section");
+  let headerContainer
 
   if(data.path && data.path.length > 1) {
     const pathContainer = document.createElement("section");
@@ -57,7 +58,7 @@ function generateHTMLStructure(data, header = true) {
   }
 
   if(header) {
-    const headerContainer = document.createElement("section");
+     headerContainer = document.createElement("section");
     sectionWrapper.appendChild(headerContainer);
     headerContainer.id = "header";
     headerContainer.classList.add("grid");
@@ -82,7 +83,7 @@ function generateHTMLStructure(data, header = true) {
         imgFigure.appendChild(img);
     }
     titleLink.appendChild(imgFigure);
-    const title = document.createElement("p");
+    const title = document.createElement("h2");
     title.innerHTML = data.name;
     titleLink.appendChild(title);
   
@@ -216,9 +217,9 @@ function generateHTMLStructure(data, header = true) {
 
 
  // exception for pages like author.html
- if((sectionWrapper.querySelectorAll('section').length  === 2)) {
+ if(headerContainer && (sectionWrapper.querySelectorAll('section').length  === 2)) {
   const hr = document.createElement('hr');
-  sectionWrapper.insertBefore(hr,sectionWrapper.querySelector('section').nextSibling);
+  headerContainer.appendChild(hr)
  }
 
 
