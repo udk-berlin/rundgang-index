@@ -4,7 +4,7 @@ let config;
 let apiUrl;
 let baseUrl;
 let apiVersion;
-let selectedLanguage = "EN";
+let selectedLanguage = "en";
 let id;
 
 let excludedAccounts = [];
