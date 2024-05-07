@@ -559,12 +559,16 @@ function generateMetaData(entryData) {
 
   // created
   const created = document.createElement("div");
+  if(entryData?.origin?.created){
   created.innerHTML =
     "<h3>" +
     (locales ? locales["Created on"] : "Created on") +
     ": </h3>" +
-    "<time>01/01/1970</time>";
-  headerInfoContainer.appendChild(created);
+    "<time>"+entryData?.origin?.created+"</time>";
+
+    headerInfoContainer.appendChild(created);
+  }
+  
 
   return headerInfoContainer;
 }
