@@ -40,9 +40,6 @@ html {
   background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: "Inter", sans-serif;
-  /*
-  font-size: 16px;
-  */
   font-size: calc(1em + 0.4vmin);
   font-style: normal;
   font-weight: 500;
@@ -62,9 +59,6 @@ body {
 
 a:link {
   color: var(--color-foreground);
-  /*
-  text-decoration: none;
-  */
   text-decoration: underline;
   text-decoration-style: dotted;
 }
@@ -172,9 +166,12 @@ header {
   z-index: 1;
 }
 
+header a:link {
+  text-decoration: none;
+}
+
 header a:hover {
   color: var(--color-highlight);
-  text-decoration: none;
 }
 
 header select {
@@ -193,13 +190,6 @@ main {
   padding-bottom: calc(var(--margin) * 2);
 }
 
-/*
-main a:link {
-  text-decoration: underline;
-  text-decoration-style: dotted;
-}
-*/
-
 main article a:link {
   text-decoration: none;
 }
@@ -212,13 +202,6 @@ main article > * {
   padding: calc(var(--margin) * 1);
 }
 
-/* NOTE: removes small gap below figure ... */
-/*
-main article figure {
-  line-height: 0;
-}
-*/
-
 /* @NOTE: makes all images square and cover/fill the space */
 main article figure > img {
   aspect-ratio: 1 / 1;
@@ -229,22 +212,12 @@ main article figure > img {
 main article figure:empty {
   aspect-ratio: 1 / 1;
   background-color: var(--color-medium-contrast);
-  /*
-  min-height: calc(var(--margin) * 14);
-  */
 }
 
 main article h2,
 main article p {
   min-height: calc(var(--margin) * 4.2);
 }
-
-/*
-main article#authorHeader + hr {
-  align-self: end;
-  margin: 0;
-}
-*/
 
 /* NOTE: removes small gap below figure ... */
 main figure {
@@ -258,22 +231,6 @@ main figure > figcaption {
   padding: 0 calc(var(--margin) * 0.2);
   text-align: center;
 }
-
-/*
-main form#search > input {
-  width: 100%;
-}
-
-main form#search,
-main section > h2:first-child {
-  background-color: var(--color-background);
-  display: flex;
-  gap: calc(var(--margin) * 0.35);
-  padding-bottom: calc(var(--margin) * 1.4);
-  position: sticky;
-  top: 4.2rem;
-}
-*/
 
 /* @NOTE: visually align h3 with form across pages */
 main h3 {
@@ -293,13 +250,6 @@ nav {
   width: 16ch;
 }
 
-/*
-nav a:link {
-  text-decoration: underline;
-  text-decoration-style: dotted;
-}
-*/
-
 nav ul {
   position: sticky;
   top: 4.2rem;
@@ -311,12 +261,6 @@ nav ul {
   grid-template-columns: repeat(auto-fill, minmax(24ch, 1fr));
   grid-gap: calc(var(--margin) * 1.4);
 }
-
-/*
-.grid.column a:link {
-  text-decoration: none;
-}
-*/
 
 @keyframes init {
   from {
