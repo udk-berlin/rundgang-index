@@ -15,9 +15,7 @@ async function getLevel(id) {
   return data;
 }
 
-
 export async function ini(type) {
-
   const response = await fetch("./config.json");
   config = await response.json();
   excludedAccounts = config.hiddenAccounts;
@@ -25,10 +23,8 @@ export async function ini(type) {
   baseUrl = config.baseUrl;
   apiVersion = config.api.version;
 
-
   const params = new URLSearchParams(window.location.search);
   id = params.get("id");
-
 
   switch (type) {
     case "explore":
@@ -39,85 +35,71 @@ export async function ini(type) {
       return iniAuthors();
     case "entries":
       return iniEntries();
-    case "entry": 
+    case "entry":
       return iniEntry();
   }
 }
 
-
-
 function generateHTMLStructure(data, header = true) {
-
   const sectionWrapper = document.createElement("section");
-  let headerContainer
+  let headerContainer;
 
-  if(data.path && data.path.length > 1) {
+  if (data.path && data.path.length > 1) {
     const pathContainer = document.createElement("section");
-    populatePath(data.path,pathContainer)
+    populatePath(data.path, pathContainer);
     sectionWrapper.appendChild(pathContainer);
   }
 
-  if(header) {
-     headerContainer = document.createElement("section");
+  if (header) {
+    headerContainer = document.createElement("section");
     sectionWrapper.appendChild(headerContainer);
     headerContainer.id = "header";
     headerContainer.classList.add("grid");
-  
+
     const headerArticle = document.createElement("article");
     headerContainer.appendChild(headerArticle);
-  
+
     const titleLink = document.createElement("a");
-    if(id.includes('@')) {
+    if (id.includes("@")) {
       titleLink.href = baseUrl + "/author.html?id=" + data.id;
     } else {
       titleLink.href = baseUrl + "/entry.html?id=" + data.id;
     }
-   
 
-    
-      const imgFigure = document.createElement("figure");
-      if(data?.thumbnail) {
-        const img = document.createElement("img");
-        img.src = data.thumbnail;
-        imgFigure.appendChild(img);
+    const imgFigure = document.createElement("figure");
+    if (data?.thumbnail) {
+      const img = document.createElement("img");
+      img.src = data.thumbnail;
+      imgFigure.appendChild(img);
     }
     titleLink.appendChild(imgFigure);
     const title = document.createElement("h2");
     title.innerHTML = data.name;
     titleLink.appendChild(title);
-  
-    headerArticle.appendChild(titleLink);
-  
-    if(data.authors || data.parents || data.created) {
-      //metadata
-  
 
-      headerContainer.appendChild( generateMetaData(data) );
+    headerArticle.appendChild(titleLink);
+
+    if (data.authors || data.parents || data.created) {
+      //metadata
+
+      headerContainer.appendChild(generateMetaData(data));
     }
   }
 
-
-
-    
-
-
-
-  if (data.hasOwnProperty('description')) {
+  if (data.hasOwnProperty("description")) {
     const descriptionContainer = document.createElement("section");
     descriptionContainer.id = "description";
     const descriptionP = document.createElement("p");
-  
+
     if (data.description.hasOwnProperty(selectedLanguage)) {
-      
       descriptionP.innerHTML = data.description[selectedLanguage];
       descriptionContainer.appendChild(descriptionP);
     }
-  
+
     if (descriptionP.innerHTML.length > 0) {
       sectionWrapper.appendChild(descriptionContainer);
     }
   }
-  
 
   // contexts
 
@@ -141,17 +123,9 @@ function generateHTMLStructure(data, header = true) {
 
   contextsContainer.appendChild(entryUlContainer);
 
-
-
-
-
   if (data?.context?.length > 0) {
     sectionWrapper.appendChild(contextsContainer);
   }
-  
-
-
-  
 
   // items
 
@@ -193,45 +167,43 @@ function generateHTMLStructure(data, header = true) {
   const contentContainer = document.createElement("section");
   contentContainer.id = "content";
 
-   // contents
-   if (data.type === "item" && data.contentData) {
-
-
+  // contents
+  if (data.type === "item" && data.contentData) {
     if (
       data.contentData?.languages[selectedLanguage]?.content &&
-      Object.keys(data.contentData?.languages[selectedLanguage]?.content).length > 0
+      Object.keys(data.contentData?.languages[selectedLanguage]?.content)
+        .length > 0
     ) {
-      Object.keys(data.contentData?.languages[selectedLanguage]?.content).forEach(
-        (key) => {
-          contentContainer.insertAdjacentHTML(
-            "beforeend",
-            data.contentData?.languages[selectedLanguage]?.content[key]
-              ?.formatted_content,
-          );
-        },
-      );
-    } 
-  } 
+      Object.keys(
+        data.contentData?.languages[selectedLanguage]?.content,
+      ).forEach((key) => {
+        contentContainer.insertAdjacentHTML(
+          "beforeend",
+          data.contentData?.languages[selectedLanguage]?.content[key]
+            ?.formatted_content,
+        );
+      });
+    }
+  }
 
   if (contentContainer.innerHTML.length > 0) {
     sectionWrapper.appendChild(contentContainer);
   }
 
-
-
- // exception for pages like author.html
- if(headerContainer && (sectionWrapper.querySelectorAll('section').length  === 2) && data.type !== 'item') {
-  const hr = document.createElement('hr');
-  headerContainer.appendChild(hr)
- }
-
+  // exception for pages like author.html
+  if (
+    headerContainer &&
+    sectionWrapper.querySelectorAll("section").length === 2 &&
+    data.type !== "item"
+  ) {
+    const hr = document.createElement("hr");
+    headerContainer.appendChild(hr);
+  }
 
   return sectionWrapper;
-
 }
 
 // ini functions
-
 
 async function iniEntry() {
   const params = new URLSearchParams(window.location.search);
@@ -242,23 +214,15 @@ async function iniEntry() {
   const responseEntry = await fetch(apiUrl + apiVersion + id);
   const entryData = await responseEntry.json();
 
-
   if (!entryData) return;
-
 
   const contentCall = await fetch(apiUrl + apiVersion + id + "/render/json");
   const contentData = await contentCall.json();
 
-
-
   entryData.contentData = contentData;
-
-
-  
 
   const generatedStructure = generateHTMLStructure(entryData);
   document.querySelector("main").appendChild(generatedStructure);
-
 }
 
 async function iniAuthor() {
@@ -279,7 +243,7 @@ async function iniAuthor() {
 }
 
 async function iniExplore() {
-  let data = {}
+  let data = {};
   if (!id) {
     const response = await fetch(`${apiUrl}${apiVersion}`);
     const d = await response.json();
@@ -294,32 +258,29 @@ async function iniExplore() {
 
   if (!id) return;
 
-  const generatedStructure = generateHTMLStructure(data,false);
+  const generatedStructure = generateHTMLStructure(data, false);
 
-  if(generatedStructure.querySelector('#contexts')) {
-    generatedStructure.querySelector('#contexts').innerHTML = '';
-   populateContextsExplore(generatedStructure.querySelector('#contexts'), data)
+  if (generatedStructure.querySelector("#contexts")) {
+    generatedStructure.querySelector("#contexts").innerHTML = "";
+    populateContextsExplore(
+      generatedStructure.querySelector("#contexts"),
+      data,
+    );
   }
 
   if (data.item?.length <= 0 && data.context?.length <= 0) {
     const code = document.createElement("code");
     code.innerHTML = "¯\\_(ツ)_/¯";
-    const notFoundSection = document.createElement('section');
+    const notFoundSection = document.createElement("section");
     notFoundSection.appendChild(code);
-    generatedStructure.querySelector('section').appendChild(notFoundSection);
-
+    generatedStructure.querySelector("section").appendChild(notFoundSection);
   }
 
   document.querySelector("main").appendChild(generatedStructure);
 }
 
-
-
- async function iniAuthors() {
-
+async function iniAuthors() {
   const allAuthors = [];
-
-
 
   const section = generateSearchForm(allAuthors);
   const authorsWrapper = section.querySelector("#contents");
@@ -362,10 +323,8 @@ async function iniExplore() {
       allAuthors.push(author);
     });
 
-
-    document.querySelector("main").appendChild(section);
+  document.querySelector("main").appendChild(section);
 }
-
 
 async function iniEntries() {
   //fill with content
@@ -374,12 +333,9 @@ async function iniEntries() {
   const section = generateSearchForm(allEntries);
   const entriesWrapper = section.querySelector("#contents");
 
-
-
   const call = await fetchGraphQL(
     "{\n  items {\n    id\n    name\n    thumbnail\n    origin {\n      authors {\n        name\n        id\n      }\n    }\n  }\n}\n",
   );
-
 
   call?.items
     ?.sort((a, b) => 0.5 - Math.random())
@@ -420,17 +376,13 @@ async function iniEntries() {
     });
   document.querySelector("main").appendChild(section);
 
-
   let lazyLoadInstance = new LazyLoad({});
   lazyLoadInstance.update();
-
 }
-
-
 
 // HELPER FUNCTIONS
 
-function generateSearchForm(dataSet) { 
+function generateSearchForm(dataSet) {
   const section = document.createElement("section");
   const searchForm = document.createElement("form");
   searchForm.id = "search";
@@ -448,13 +400,12 @@ function generateSearchForm(dataSet) {
   contents.id = "contents";
   contents.classList.add("grid");
   section.appendChild(contents);
-  
+
   searchInput.addEventListener("input", (e) => {
     search(dataSet, e.target.value);
   });
 
   return section;
-
 }
 
 function search(data, content) {
@@ -473,7 +424,7 @@ function search(data, content) {
 }
 
 function populateContextsExplore(contextContainer, data) {
-  if(!data.context) return 
+  if (!data.context) return;
   const ul = document.createElement("ul");
   let sortedContext = [...data.context].sort((a, b) =>
     a.name.localeCompare(b.name),
@@ -489,14 +440,11 @@ function populateContextsExplore(contextContainer, data) {
 
     contextContainer.appendChild(ul);
   });
-
-  
 }
 
-function populatePath(data,pathContainer) {
-
+function populatePath(data, pathContainer) {
   pathContainer.innerHTML = "";
-  pathContainer.id = 'path'
+  pathContainer.id = "path";
 
   const ul = document.createElement("ul");
 
@@ -524,67 +472,63 @@ async function getPath(id) {
   return data;
 }
 
-
-
- function generateMetaData(entryData) {
+function generateMetaData(entryData) {
   const headerInfoContainer = document.createElement("aside");
 
+  // parents
+  const parentsContainer = document.createElement("div");
+  parentsContainer.innerHTML = "<h3>Published in: </h3>";
+  const parentsList = document.createElement("ul");
+  parentsContainer.appendChild(parentsList);
+  entryData?.parents.forEach(async (parent) => {
+    const parentContainer = document.createElement("li");
+    const parentLink = document.createElement("a");
+    parentLink.href = baseUrl + "/entry.html?id=" + parent;
+    const parentCall = await fetch(apiUrl + apiVersion + parent);
+    const parentData = await parentCall.json();
+    parentLink.innerHTML = parentData.name;
 
-    // parents
-    const parentsContainer = document.createElement("div");
-    parentsContainer.innerHTML = "<h3>Published in: </h3>";
-    const parentsList = document.createElement("ul");
-    parentsContainer.appendChild(parentsList);
-    entryData?.parents.forEach(async (parent) => {
-      const parentContainer = document.createElement("li");
-      const parentLink = document.createElement("a");
-      parentLink.href = baseUrl + "/entry.html?id=" + parent;
-      const parentCall = await fetch(apiUrl + apiVersion + parent);
-      const parentData = await parentCall.json();
-      parentLink.innerHTML = parentData.name;
-  
-      parentContainer.appendChild(parentLink);
-      parentsList.appendChild(parentContainer);
-    });
-  
-    // authors
-    const authorsContainer = document.createElement("div");
-  
-    if (entryData.type === "item") {
-      authorsContainer.innerHTML = "<h3>Authors: </h3>";
-    } else {
-      authorsContainer.innerHTML = "<h3>Moderators: </h3>";
-    }
-  
-    const authorsList = document.createElement("ul");
-    authorsContainer.appendChild(authorsList);
-    entryData?.origin?.authors?.forEach((author) => {
-      if (!author) return;
-      if (author?.name?.lenght < 1) return;
-      if (excludedAccounts.some((f) => author?.id.includes(f))) return;
-  
-      const authorContainer = document.createElement("li");
-      const authorLink = document.createElement("a");
-      authorLink.href = baseUrl + "/author.html?id=" + author?.id;
-      authorLink.innerHTML = author?.name;
-      authorContainer.appendChild(authorLink);
-      authorsList.appendChild(authorContainer);
-    });
-  
-    if (authorsList.innerHTML.length > 0) {
-      headerInfoContainer.appendChild(authorsContainer);
-    }
-  
-    headerInfoContainer.appendChild(parentsContainer);
-  
-    // created
-    const created = document.createElement("div");
-    created.innerHTML = "<h3>Created on: </h3>" + "<time>01/01/1970</time>";
-    headerInfoContainer.appendChild(created);
-  
-   return headerInfoContainer
+    parentContainer.appendChild(parentLink);
+    parentsList.appendChild(parentContainer);
+  });
 
- }
+  // authors
+  const authorsContainer = document.createElement("div");
+
+  if (entryData.type === "item") {
+    authorsContainer.innerHTML = "<h3>Authors: </h3>";
+  } else {
+    authorsContainer.innerHTML = "<h3>Moderators: </h3>";
+  }
+
+  const authorsList = document.createElement("ul");
+  authorsContainer.appendChild(authorsList);
+  entryData?.origin?.authors?.forEach((author) => {
+    if (!author) return;
+    if (author?.name?.lenght < 1) return;
+    if (excludedAccounts.some((f) => author?.id.includes(f))) return;
+
+    const authorContainer = document.createElement("li");
+    const authorLink = document.createElement("a");
+    authorLink.href = baseUrl + "/author.html?id=" + author?.id;
+    authorLink.innerHTML = author?.name;
+    authorContainer.appendChild(authorLink);
+    authorsList.appendChild(authorContainer);
+  });
+
+  if (authorsList.innerHTML.length > 0) {
+    headerInfoContainer.appendChild(authorsContainer);
+  }
+
+  headerInfoContainer.appendChild(parentsContainer);
+
+  // created
+  const created = document.createElement("div");
+  created.innerHTML = "<h3>Created on: </h3>" + "<time>01/01/1970</time>";
+  headerInfoContainer.appendChild(created);
+
+  return headerInfoContainer;
+}
 
 async function fetchGraphQL(query) {
   const req = await fetch(apiUrl + "/graphql", {
