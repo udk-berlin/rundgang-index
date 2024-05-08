@@ -1,5 +1,4 @@
-main section > section + section,
-main section > section#contents > * + * {
+main section > section + section {
   margin-top: calc(var(--margin) * 1.4);
 }
 
@@ -7,4 +6,19 @@ main #content > * + *,
 main #description > * + *,
 main #header > aside > * + * {
   margin-top: calc(var(--margin) * 0.7);
+}
+
+main #content {
+  max-width: var(--max-width);
+}
+
+main #content .image > img {
+  object-fit: contain;
+  width: 100%;
+}
+
+main #content .video > iframe {
+  aspect-ratio: 16/9;
+  height: auto;
+  width: 100%;
 }
