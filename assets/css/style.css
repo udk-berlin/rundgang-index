@@ -11,7 +11,7 @@
   --color-medium-contrast: rgb(128,128,128);
   --color-low-contrast: rgb(240,240,240);
   --margin: 1rem;
-  --width: 55ch;
+  --max-width: 55ch;
 }
 
 /* dark mode */
@@ -238,7 +238,7 @@ main h3 {
 }
 
 main p {
-  max-width: var(--width);
+  max-width: var(--max-width);
   overflow-wrap: break-word;
 }
 
