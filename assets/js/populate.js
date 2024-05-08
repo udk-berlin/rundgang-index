@@ -99,8 +99,7 @@ function generateHTMLStructure(data, header = true) {
     headerArticle.appendChild(titleLink);
 
     if (data.authors || data.parents || data.created) {
-      //metadata
-
+      // metadata
       headerContainer.appendChild(generateMetaData(data));
     }
   }
@@ -124,7 +123,6 @@ function generateHTMLStructure(data, header = true) {
   }
 
   // contexts
-
   const contextsContainer = document.createElement("section");
   contextsContainer.id = "contexts";
 
@@ -151,7 +149,6 @@ function generateHTMLStructure(data, header = true) {
   }
 
   // items
-
   const itemsContainer = document.createElement("section");
   itemsContainer.id = "items";
   itemsContainer.classList.add("grid");
@@ -186,11 +183,10 @@ function generateHTMLStructure(data, header = true) {
     sectionWrapper.appendChild(itemsContainer);
   }
 
-  //contents
+  // contents
   const contentContainer = document.createElement("section");
   contentContainer.id = "content";
 
-  // contents
   if (data.type === "item" && data.contentData && data.contentData?.languages) {
     if (
       data.contentData?.languages[selectedLanguage.toUpperCase()]?.content &&
@@ -232,7 +228,6 @@ function generateHTMLStructure(data, header = true) {
 }
 
 // ini functions
-
 function iniIndex() {
   document.querySelector("h2").innerHTML = locales
     ? locales["Archived Rundgang web experiences"]
@@ -263,7 +258,9 @@ async function iniAuthor() {
   if (!id) return;
 
   const call = await fetchGraphQL(
-    '{ user(id: "' + id + '") { name id thumbnail item { name thumbnail id } } }',
+    '{ user(id: "' +
+      id +
+      '") { name id thumbnail item { name thumbnail id } } }',
   );
 
   const userData = call?.user;
@@ -317,7 +314,7 @@ async function iniAuthors() {
   const section = generateSearchForm(allAuthors);
   const authorsWrapper = section.querySelector("#contents");
 
-  //fill with content
+  // fill with content
   const call = await fetchGraphQL(
     "{ users { id name thumbnail item { id } } }",
   );
@@ -359,7 +356,7 @@ async function iniAuthors() {
 }
 
 async function iniEntries() {
-  //fill with content
+  // fill with content
   const allEntries = [];
 
   const section = generateSearchForm(allEntries);
@@ -391,7 +388,6 @@ async function iniEntries() {
         entryImg.classList.add("lazy");
         entryImgContainer.appendChild(entryImg);
       }
-      //<img alt="A lazy image" class="lazy" data-src="lazy.jpg" />
       entryLink.href = baseUrl + "/entry.html?id=" + entry.id;
 
       entryInfoContainer.innerHTML = entry.name;
@@ -413,7 +409,6 @@ async function iniEntries() {
 }
 
 // HELPER FUNCTIONS
-
 function generateSearchForm(dataSet) {
   const section = document.createElement("section");
   const searchForm = document.createElement("form");
@@ -559,16 +554,17 @@ function generateMetaData(entryData) {
 
   // created
   const created = document.createElement("div");
-  if(entryData?.origin?.created){
-  created.innerHTML =
-    "<h3>" +
-    (locales ? locales["Created on"] : "Created on") +
-    ": </h3>" +
-    "<time>"+entryData?.origin?.created+"</time>";
+  if (entryData?.origin?.created) {
+    created.innerHTML =
+      "<h3>" +
+      (locales ? locales["Created on"] : "Created on") +
+      ": </h3>" +
+      "<time>" +
+      entryData?.origin?.created +
+      "</time>";
 
     headerInfoContainer.appendChild(created);
   }
-  
 
   return headerInfoContainer;
 }
