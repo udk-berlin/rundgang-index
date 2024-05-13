@@ -129,7 +129,7 @@ function generateHTMLStructure(data, header = true) {
   const entryUlContainer = document.createElement("ul");
   entryUlContainer.innerHTML =
     "<h3>" + (locales ? locales["Sub-Contexts"] : "Sub-Contexts") + ": </h3>";
-  data?.context?.forEach((context) => {
+  data?.context?.sort((a, b) => 0.5 - Math.random())?.forEach((context) => {
     const entryContainer = document.createElement("li");
     const entryLink = document.createElement("a");
 
@@ -153,7 +153,7 @@ function generateHTMLStructure(data, header = true) {
   itemsContainer.id = "items";
   itemsContainer.classList.add("grid");
 
-  data?.item?.forEach((item) => {
+  data?.item?.sort((a, b) => 0.5 - Math.random())?.forEach((item) => {
     const entryContainer = document.createElement("article");
     const entryLink = document.createElement("a");
     const entryImgContainer = document.createElement("figure");
