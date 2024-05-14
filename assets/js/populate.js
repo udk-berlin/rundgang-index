@@ -299,7 +299,7 @@ async function iniExplore() {
 
   if (data.item?.length <= 0 && data.context?.length <= 0) {
     const notFoundParagraph = document.createElement("p");
-    notFoundParagraph.innerHTML = "There’s nothing here, yet. 🫥";
+    notFoundParagraph.innerHTML = (locales ? locales["There’s nothing here, yet. 🫥"] : "There’s nothing here, yet. 🫥");
     const notFoundSection = document.createElement("section");
     notFoundSection.appendChild(notFoundParagraph);
     generatedStructure.querySelector("#path").after(notFoundSection);
