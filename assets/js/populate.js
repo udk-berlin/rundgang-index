@@ -218,7 +218,8 @@ function generateHTMLStructure(data, header = true) {
   if (
     headerContainer &&
     sectionWrapper.querySelectorAll("section").length === 2 &&
-    data.type !== "item"
+    data.type !== "item" &&
+    window.location.pathname.includes("author.html")
   ) {
     const hr = document.createElement("hr");
     headerContainer.appendChild(hr);
