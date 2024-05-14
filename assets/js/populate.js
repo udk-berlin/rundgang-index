@@ -298,11 +298,11 @@ async function iniExplore() {
   }
 
   if (data.item?.length <= 0 && data.context?.length <= 0) {
-    const code = document.createElement("code");
-    code.innerHTML = "¯\\_(ツ)_/¯";
+    const notFoundParagraph = document.createElement("p");
+    notFoundParagraph.innerHTML = "There’s nothing here, yet. 🫥";
     const notFoundSection = document.createElement("section");
-    notFoundSection.appendChild(code);
-    generatedStructure.querySelector("section").appendChild(notFoundSection);
+    notFoundSection.appendChild(notFoundParagraph);
+    generatedStructure.querySelector("#path").after(notFoundSection);
   }
 
   document.querySelector("main").appendChild(generatedStructure);
