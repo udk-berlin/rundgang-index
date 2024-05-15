@@ -257,6 +257,7 @@ function generateHTMLStructure(data, header = true) {
 
 // ini functions
 function iniIndex() {
+  removeLoading();
   document.querySelector("h2").innerHTML = locales
     ? locales["Archived Rundgang web experiences"]
     : "Archived Rundgang web experiences";
