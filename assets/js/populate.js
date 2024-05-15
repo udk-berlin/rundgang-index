@@ -21,6 +21,8 @@ export async function ini(type) {
   const params = new URLSearchParams(window.location.search);
   id = params.get("id");
 
+  // loading spinner html, styled via css
+  // <div class="loading"><span class="spinner"></span></div>
   const main = document.querySelector("main");
   const loadingDiv = document.createElement("div");
   const loadingSpan = document.createElement("span");
@@ -30,7 +32,6 @@ export async function ini(type) {
   main.appendChild(loadingDiv);
   console.log(main);
 
-  //<div class="loading"><span class="spinner"></span></div>
   await languageSelector();
 
   switch (type) {
