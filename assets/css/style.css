@@ -202,7 +202,7 @@ main article > * {
   padding: calc(var(--margin) * 1);
 }
 
-/* @NOTE: makes all images square and cover/fill the space */
+/* @NOTE: makes all images square and cover the space */
 main article figure > img {
   aspect-ratio: 1 / 1;
   object-fit: cover;
@@ -215,11 +215,12 @@ main article figure:empty {
 }
 
 main article h2,
+main article h3,
 main article p {
   min-height: calc(var(--margin) * 4.2);
 }
 
-/* NOTE: removes small gap below figure ... */
+/* NOTE: removes small gap below figure */
 main figure {
   line-height: 0;
 }
