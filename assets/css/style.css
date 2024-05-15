@@ -232,11 +232,6 @@ main figure > figcaption {
   text-align: center;
 }
 
-/* @NOTE: visually align h3 with form across pages */
-main h3 {
-  padding-top: calc(var(--margin) * 0.32);
-}
-
 main p {
   max-width: var(--max-width);
   overflow-wrap: break-word;
