@@ -77,7 +77,7 @@ async function languageSelector() {
 
   if (selectedLanguage === "en") return;
   locales = await fetch("./assets/locales/" + selectedLanguage + ".json").then(
-    (response) => response.json()
+    (response) => response.json(),
   );
 }
 
@@ -217,20 +217,20 @@ function generateHTMLStructure(data, header = true) {
     if (
       data.contentData?.languages[selectedLanguage.toUpperCase()]?.content &&
       Object.keys(
-        data.contentData?.languages[selectedLanguage.toUpperCase()]?.content
+        data.contentData?.languages[selectedLanguage.toUpperCase()]?.content,
       ).length > 0
     ) {
       const contentH3 = document.createElement("h3");
       contentH3.innerHTML = locales ? locales["Content"] : "Content";
       contentContainer.appendChild(contentH3);
       Object.keys(
-        data.contentData?.languages[selectedLanguage.toUpperCase()]?.content
+        data.contentData?.languages[selectedLanguage.toUpperCase()]?.content,
       ).forEach((key) => {
         contentContainer.insertAdjacentHTML(
           "beforeend",
           data.contentData?.languages[selectedLanguage.toUpperCase()]?.content[
             key
-          ]?.formatted_content
+          ]?.formatted_content,
         );
       });
     }
@@ -287,7 +287,7 @@ async function iniAuthor() {
   const call = await fetchGraphQL(
     '{ user(id: "' +
       id +
-      '") { name id thumbnail item { name thumbnail id } } }'
+      '") { name id thumbnail item { name thumbnail id } } }',
   );
 
   const userData = call?.user;
@@ -320,7 +320,7 @@ async function iniExplore() {
     generatedStructure.querySelector("#contexts").innerHTML = "";
     populateContextsExplore(
       generatedStructure.querySelector("#contexts"),
-      data
+      data,
     );
   }
 
@@ -345,7 +345,7 @@ async function iniAuthors() {
 
   // fill with content
   const call = await fetchGraphQL(
-    "{ users { id name thumbnail item { id } } }"
+    "{ users { id name thumbnail item { id } } }",
   );
 
   call?.users
@@ -392,7 +392,7 @@ async function iniEntries() {
   const entriesWrapper = section.querySelector("#contents");
 
   const call = await fetchGraphQL(
-    "{ items { id name thumbnail origin { authors { name id } } } }"
+    "{ items { id name thumbnail origin { authors { name id } } } }",
   );
 
   call?.items
@@ -484,7 +484,7 @@ function populateContextsExplore(contextContainer, data) {
   if (!data.context) return;
   const ul = document.createElement("ul");
   let sortedContext = [...data.context].sort((a, b) =>
-    a.name.localeCompare(b.name)
+    a.name.localeCompare(b.name),
   );
   sortedContext.forEach((context) => {
     const li = document.createElement("li");
