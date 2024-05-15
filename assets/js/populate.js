@@ -55,7 +55,7 @@ async function languageSelector() {
 
   if (selectedLanguage === "en") return;
   locales = await fetch("./assets/locales/" + selectedLanguage + ".json").then(
-    (response) => response.json()
+    (response) => response.json(),
   );
 }
 
@@ -129,18 +129,20 @@ function generateHTMLStructure(data, header = true) {
   const entryUlContainer = document.createElement("ul");
   entryUlContainer.innerHTML =
     "<h3>" + (locales ? locales["Sub-Contexts"] : "Sub-Contexts") + ": </h3>";
-  data?.context?.sort((a, b) => 0.5 - Math.random())?.forEach((context) => {
-    const entryContainer = document.createElement("li");
-    const entryLink = document.createElement("a");
+  data?.context
+    ?.sort((a, b) => 0.5 - Math.random())
+    ?.forEach((context) => {
+      const entryContainer = document.createElement("li");
+      const entryLink = document.createElement("a");
 
-    entryLink.href = baseUrl + "/entry.html?id=" + context?.id;
+      entryLink.href = baseUrl + "/entry.html?id=" + context?.id;
 
-    entryLink.innerHTML = context?.name;
+      entryLink.innerHTML = context?.name;
 
-    entryContainer.appendChild(entryLink);
+      entryContainer.appendChild(entryLink);
 
-    entryUlContainer.appendChild(entryContainer);
-  });
+      entryUlContainer.appendChild(entryContainer);
+    });
 
   contextsContainer.appendChild(entryUlContainer);
 
@@ -153,31 +155,33 @@ function generateHTMLStructure(data, header = true) {
   itemsContainer.id = "items";
   itemsContainer.classList.add("grid");
 
-  data?.item?.sort((a, b) => 0.5 - Math.random())?.forEach((item) => {
-    const entryContainer = document.createElement("article");
-    const entryLink = document.createElement("a");
-    const entryImgContainer = document.createElement("figure");
-    const entryInfoContainer = document.createElement("p");
+  data?.item
+    ?.sort((a, b) => 0.5 - Math.random())
+    ?.forEach((item) => {
+      const entryContainer = document.createElement("article");
+      const entryLink = document.createElement("a");
+      const entryImgContainer = document.createElement("figure");
+      const entryInfoContainer = document.createElement("p");
 
-    if (item?.id?.includes("@donotuse")) return;
-    if (!item?.name) return;
+      if (item?.id?.includes("@donotuse")) return;
+      if (!item?.name) return;
 
-    if (item?.thumbnail) {
-      const entryImg = document.createElement("img");
-      entryImg.src = item?.thumbnail;
-      entryImgContainer.appendChild(entryImg);
-    }
-    entryLink.appendChild(entryImgContainer);
-    entryLink.href = baseUrl + "/entry.html?id=" + item.id;
+      if (item?.thumbnail) {
+        const entryImg = document.createElement("img");
+        entryImg.src = item?.thumbnail;
+        entryImgContainer.appendChild(entryImg);
+      }
+      entryLink.appendChild(entryImgContainer);
+      entryLink.href = baseUrl + "/entry.html?id=" + item.id;
 
-    entryInfoContainer.innerHTML = item.name;
+      entryInfoContainer.innerHTML = item.name;
 
-    entryLink.appendChild(entryInfoContainer);
+      entryLink.appendChild(entryInfoContainer);
 
-    entryContainer.appendChild(entryLink);
+      entryContainer.appendChild(entryLink);
 
-    itemsContainer.appendChild(entryContainer);
-  });
+      itemsContainer.appendChild(entryContainer);
+    });
 
   if (data?.item?.length > 0) {
     sectionWrapper.appendChild(itemsContainer);
@@ -191,20 +195,20 @@ function generateHTMLStructure(data, header = true) {
     if (
       data.contentData?.languages[selectedLanguage.toUpperCase()]?.content &&
       Object.keys(
-        data.contentData?.languages[selectedLanguage.toUpperCase()]?.content
+        data.contentData?.languages[selectedLanguage.toUpperCase()]?.content,
       ).length > 0
     ) {
       const contentH3 = document.createElement("h3");
       contentH3.innerHTML = locales ? locales["Content"] : "Content";
       contentContainer.appendChild(contentH3);
       Object.keys(
-        data.contentData?.languages[selectedLanguage.toUpperCase()]?.content
+        data.contentData?.languages[selectedLanguage.toUpperCase()]?.content,
       ).forEach((key) => {
         contentContainer.insertAdjacentHTML(
           "beforeend",
           data.contentData?.languages[selectedLanguage.toUpperCase()]?.content[
             key
-          ]?.formatted_content
+          ]?.formatted_content,
         );
       });
     }
@@ -261,7 +265,7 @@ async function iniAuthor() {
   const call = await fetchGraphQL(
     '{ user(id: "' +
       id +
-      '") { name id thumbnail item { name thumbnail id } } }'
+      '") { name id thumbnail item { name thumbnail id } } }',
   );
 
   const userData = call?.user;
@@ -294,13 +298,15 @@ async function iniExplore() {
     generatedStructure.querySelector("#contexts").innerHTML = "";
     populateContextsExplore(
       generatedStructure.querySelector("#contexts"),
-      data
+      data,
     );
   }
 
   if (data.item?.length <= 0 && data.context?.length <= 0) {
     const notFoundParagraph = document.createElement("p");
-    notFoundParagraph.innerHTML = (locales ? locales["There’s nothing here, yet. 🫥"] : "There’s nothing here, yet. 🫥");
+    notFoundParagraph.innerHTML = locales
+      ? locales["There’s nothing here, yet. 🫥"]
+      : "There’s nothing here, yet. 🫥";
     const notFoundSection = document.createElement("section");
     notFoundSection.appendChild(notFoundParagraph);
     generatedStructure.querySelector("#path").after(notFoundSection);
@@ -317,7 +323,7 @@ async function iniAuthors() {
 
   // fill with content
   const call = await fetchGraphQL(
-    "{ users { id name thumbnail item { id } } }"
+    "{ users { id name thumbnail item { id } } }",
   );
 
   call?.users
@@ -364,7 +370,7 @@ async function iniEntries() {
   const entriesWrapper = section.querySelector("#contents");
 
   const call = await fetchGraphQL(
-    "{ items { id name thumbnail origin { authors { name id } } } }"
+    "{ items { id name thumbnail origin { authors { name id } } } }",
   );
 
   call?.items
@@ -455,7 +461,7 @@ function populateContextsExplore(contextContainer, data) {
   if (!data.context) return;
   const ul = document.createElement("ul");
   let sortedContext = [...data.context].sort((a, b) =>
-    a.name.localeCompare(b.name)
+    a.name.localeCompare(b.name),
   );
   sortedContext.forEach((context) => {
     const li = document.createElement("li");
