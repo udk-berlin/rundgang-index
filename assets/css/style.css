@@ -258,12 +258,37 @@ nav ul {
   grid-gap: calc(var(--margin) * 1.4);
 }
 
+.loading {
+  display: flex;
+  gap: calc(var(--margin) * 0.5);
+}
+
+.spinner {
+  border-color: var(--color-foreground) transparent var(--color-foreground) transparent;
+  border-style: solid;
+  border-width: calc(var(--margin) * 0.15);
+  border-radius: 50%;
+  display: inline-block;
+  height: 1.4rem;
+  width: 1.4rem;
+  animation: loading 2.4s linear infinite;
+}
+
 @keyframes init {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 
