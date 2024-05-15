@@ -21,6 +21,16 @@ export async function ini(type) {
   const params = new URLSearchParams(window.location.search);
   id = params.get("id");
 
+  const main = document.querySelector("main");
+  const loadingDiv = document.createElement("div");
+  const loadingSpan = document.createElement("span");
+  loadingDiv.classList.add("loading");
+  loadingSpan.classList.add("spinner");
+  loadingDiv.appendChild(loadingSpan);
+  main.appendChild(loadingDiv);
+  console.log(main);
+
+  //<div class="loading"><span class="spinner"></span></div>
   await languageSelector();
 
   switch (type) {
@@ -37,6 +47,18 @@ export async function ini(type) {
     case "index":
       return iniIndex();
   }
+}
+
+function removeLoading() {
+  const loadingDiv = document.querySelector(".loading");
+  if (loadingDiv) {
+    loadingDiv.remove();
+  }
+}
+
+function insertContentToMain(data) {
+  removeLoading();
+  document.querySelector("main").appendChild(data);
 }
 
 async function languageSelector() {
@@ -129,18 +151,20 @@ function generateHTMLStructure(data, header = true) {
   const entryUlContainer = document.createElement("ul");
   entryUlContainer.innerHTML =
     "<h3>" + (locales ? locales["Sub-Contexts"] : "Sub-Contexts") + ": </h3>";
-  data?.context?.sort((a, b) => 0.5 - Math.random())?.forEach((context) => {
-    const entryContainer = document.createElement("li");
-    const entryLink = document.createElement("a");
+  data?.context
+    ?.sort((a, b) => 0.5 - Math.random())
+    ?.forEach((context) => {
+      const entryContainer = document.createElement("li");
+      const entryLink = document.createElement("a");
 
-    entryLink.href = baseUrl + "/entry.html?id=" + context?.id;
+      entryLink.href = baseUrl + "/entry.html?id=" + context?.id;
 
-    entryLink.innerHTML = context?.name;
+      entryLink.innerHTML = context?.name;
 
-    entryContainer.appendChild(entryLink);
+      entryContainer.appendChild(entryLink);
 
-    entryUlContainer.appendChild(entryContainer);
-  });
+      entryUlContainer.appendChild(entryContainer);
+    });
 
   contextsContainer.appendChild(entryUlContainer);
 
@@ -153,31 +177,33 @@ function generateHTMLStructure(data, header = true) {
   itemsContainer.id = "items";
   itemsContainer.classList.add("grid");
 
-  data?.item?.sort((a, b) => 0.5 - Math.random())?.forEach((item) => {
-    const entryContainer = document.createElement("article");
-    const entryLink = document.createElement("a");
-    const entryImgContainer = document.createElement("figure");
-    const entryInfoContainer = document.createElement("p");
+  data?.item
+    ?.sort((a, b) => 0.5 - Math.random())
+    ?.forEach((item) => {
+      const entryContainer = document.createElement("article");
+      const entryLink = document.createElement("a");
+      const entryImgContainer = document.createElement("figure");
+      const entryInfoContainer = document.createElement("p");
 
-    if (item?.id?.includes("@donotuse")) return;
-    if (!item?.name) return;
+      if (item?.id?.includes("@donotuse")) return;
+      if (!item?.name) return;
 
-    if (item?.thumbnail) {
-      const entryImg = document.createElement("img");
-      entryImg.src = item?.thumbnail;
-      entryImgContainer.appendChild(entryImg);
-    }
-    entryLink.appendChild(entryImgContainer);
-    entryLink.href = baseUrl + "/entry.html?id=" + item.id;
+      if (item?.thumbnail) {
+        const entryImg = document.createElement("img");
+        entryImg.src = item?.thumbnail;
+        entryImgContainer.appendChild(entryImg);
+      }
+      entryLink.appendChild(entryImgContainer);
+      entryLink.href = baseUrl + "/entry.html?id=" + item.id;
 
-    entryInfoContainer.innerHTML = item.name;
+      entryInfoContainer.innerHTML = item.name;
 
-    entryLink.appendChild(entryInfoContainer);
+      entryLink.appendChild(entryInfoContainer);
 
-    entryContainer.appendChild(entryLink);
+      entryContainer.appendChild(entryLink);
 
-    itemsContainer.appendChild(entryContainer);
-  });
+      itemsContainer.appendChild(entryContainer);
+    });
 
   if (data?.item?.length > 0) {
     sectionWrapper.appendChild(itemsContainer);
@@ -252,7 +278,7 @@ async function iniEntry() {
   entryData.contentData = contentData;
 
   const generatedStructure = generateHTMLStructure(entryData);
-  document.querySelector("main").appendChild(generatedStructure);
+  insertContentToMain(generatedStructure);
 }
 
 async function iniAuthor() {
@@ -269,7 +295,7 @@ async function iniAuthor() {
   if (!userData) return;
 
   const generatedStructure = generateHTMLStructure(userData);
-  document.querySelector("main").appendChild(generatedStructure);
+  insertContentToMain(generatedStructure);
 }
 
 async function iniExplore() {
@@ -300,13 +326,15 @@ async function iniExplore() {
 
   if (data.item?.length <= 0 && data.context?.length <= 0) {
     const notFoundParagraph = document.createElement("p");
-    notFoundParagraph.innerHTML = (locales ? locales["There’s nothing here, yet. 🫥"] : "There’s nothing here, yet. 🫥");
+    notFoundParagraph.innerHTML = locales
+      ? locales["There’s nothing here, yet. 🫥"]
+      : "There’s nothing here, yet. 🫥";
     const notFoundSection = document.createElement("section");
     notFoundSection.appendChild(notFoundParagraph);
     generatedStructure.querySelector("#path").after(notFoundSection);
   }
 
-  document.querySelector("main").appendChild(generatedStructure);
+  insertContentToMain(generatedStructure);
 }
 
 async function iniAuthors() {
@@ -353,7 +381,7 @@ async function iniAuthors() {
       allAuthors.push(author);
     });
 
-  document.querySelector("main").appendChild(section);
+  insertContentToMain(section);
 }
 
 async function iniEntries() {
@@ -403,7 +431,8 @@ async function iniEntries() {
 
       allEntries.push(entry);
     });
-  document.querySelector("main").appendChild(section);
+
+  insertContentToMain(section);
 
   let lazyLoadInstance = new LazyLoad({});
   lazyLoadInstance.update();
